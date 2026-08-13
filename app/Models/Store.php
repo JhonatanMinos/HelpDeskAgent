@@ -33,7 +33,6 @@ class Store extends Model
     protected function casts(): array
     {
         return [
-            'company' => 'integer',
             'last_seen_at' => 'datetime',
         ];
     }
@@ -64,7 +63,7 @@ class Store extends Model
     public function getDeviceIpsAttribute(): array
     {
         return collect(self::DEVICE_OCTETS)
-            ->mapWithKeys(fn($octet, $key) => [$key => $this->ipForDevice($key)])
+            ->mapWithKeys(fn ($octet, $key) => [$key => $this->ipForDevice($key)])
             ->all();
     }
 
@@ -74,7 +73,7 @@ class Store extends Model
             throw new \InvalidArgumentException("Dispositivo desconocido: {$deviceKey}");
         }
 
-        return $this->baseNetworkOctets() . '.' . self::DEVICE_OCTETS[$deviceKey];
+        return $this->baseNetworkOctets().'.'.self::DEVICE_OCTETS[$deviceKey];
     }
 
     public function printFlow(): array

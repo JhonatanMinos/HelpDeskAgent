@@ -16,7 +16,7 @@ type PageProps = {
     dashboard: {
         total: number;
         online: number;
-        regions: { north: number; south: number };
+        company: { company: string; total: number };
         states: number;
     };
     stores: Stores[];
@@ -73,7 +73,7 @@ export default function StoreDashboard({ pendingInvitations = [] }: PageProps) {
                 <StoreStatsCards
                     total={dashboard.total}
                     onlineCount={dashboard.online}
-                    regions={dashboard.regions}
+                    companys={dashboard.company}
                 />
 
                 <StoreToolbar

@@ -8,42 +8,8 @@ use Illuminate\Database\Eloquent\Collection;
 class StoreRepository
 {
     private const REGIONS = [
-        'north' => [
-            'Baja California',
-            'Baja California Sur',
-            'Sonora',
-            'Chihuahua',
-            'Coahuila',
-            'Nuevo León',
-            'Tamaulipas',
-            'Durango',
-            'Sinaloa',
-            'Zacatecas',
-            'San Luis Potosí',
-        ],
-        'south' => [
-            'Aguascalientes',
-            'Colima',
-            'Jalisco',
-            'Michoacán',
-            'Guanajuato',
-            'Querétaro',
-            'Hidalgo',
-            'Estado de México',
-            'Ciudad de México',
-            'Morelos',
-            'Tlaxcala',
-            'Puebla',
-            'Veracruz',
-            'Guerrero',
-            'Oaxaca',
-            'Chiapas',
-            'Tabasco',
-            'Campeche',
-            'Yucatán',
-            'Quintana Roo',
-            'Nayarit',
-        ],
+        'north' => [],
+        'south' => [],
     ];
 
     public function getAll(?string $search = null)
@@ -63,14 +29,17 @@ class StoreRepository
         return [
             'total' => Store::count(),
             'online' => Store::where('status', 'online')->count(),
-            'regions' => $this->countByCompany(),
+            'company' => $this->countByCompany(),
             'states' => $this->countByStates(),
         ];
     }
 
-    private function countByCompany(): Collection
+    private function countByCompany(): array
     {
-        return Store::where('company', 24)->count();
+        return Store::selectRaw('company, COUNT(*) as total')
+            ->groupBy('company')
+            ->get()
+            ->toArray();
     }
 
     private function countByStates(): Collection

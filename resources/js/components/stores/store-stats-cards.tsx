@@ -11,14 +11,15 @@ import 'odometer/themes/odometer-theme-default.css';
 type StoreDashboardStats = {
     total: number;
     onlineCount: number;
-    regions: { north: number; south: number };
+    companys: { company: string; total: number };
 };
 
 export function StoreStatsCards({
     total,
     onlineCount,
-    regions,
+    companys,
 }: StoreDashboardStats) {
+    console.log(companys);
     return (
         <div className="grid grid-cols-3 gap-4 @xl/main:grid-cols-2 @5xl/main:grid-cols-3">
             <Card className="@container/card">
@@ -32,10 +33,9 @@ export function StoreStatsCards({
                     </CardAction>
                 </CardHeader>
             </Card>
-
             <Card className="@container/card">
                 <CardHeader>
-                    <CardDescription>Online Status</CardDescription>
+                    <CardDescription>en linea</CardDescription>
                     <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
                         {onlineCount} / {total}
                     </CardTitle>
@@ -47,10 +47,15 @@ export function StoreStatsCards({
 
             <Card className="@container/card">
                 <CardHeader>
-                    <CardDescription>Regiones</CardDescription>
-                    <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-                        {regions.north} / {regions.south}
-                    </CardTitle>
+                    <CardDescription>Compañias</CardDescription>
+                    {companys.map((item) => (
+                        <CardTitle
+                            key={item.companys}
+                            className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl"
+                        >
+                            {item.company} / {item.total}
+                        </CardTitle>
+                    ))}
                     <CardAction>
                         <MapIcon size={44} />
                     </CardAction>
