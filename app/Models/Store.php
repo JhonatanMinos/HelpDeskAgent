@@ -37,16 +37,19 @@ class Store extends Model
         ];
     }
 
+    /** @return BelongsTo<Team, $this> */
     public function team(): BelongsTo
     {
         return $this->belongsTo(Team::class);
     }
 
+    /** @return HasMany<Device, $this> */
     public function device(): HasMany
     {
         return $this->hasMany(Device::class);
     }
 
+    /** @return HasMany<Ticket, $this> */
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
@@ -60,6 +63,7 @@ class Store extends Model
         return implode('.', $parts);
     }
 
+    /** @return array<string, string> */
     public function getDeviceIpsAttribute(): array
     {
         return collect(self::DEVICE_OCTETS)
@@ -76,6 +80,7 @@ class Store extends Model
         return $this->baseNetworkOctets().'.'.self::DEVICE_OCTETS[$deviceKey];
     }
 
+    /** @return array{servidor: string, cajas: list<string>} */
     public function printFlow(): array
     {
         return [
@@ -87,6 +92,7 @@ class Store extends Model
         ];
     }
 
+    /** @return MorphMany<PingLog, $this> */
     public function pingLogs(): MorphMany
     {
         return $this->morphMany(PingLog::class, 'pingable');

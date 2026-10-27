@@ -25,6 +25,7 @@ class PingLog extends Model
         ];
     }
 
+    /** @return MorphTo<Model, $this> */
     public function pingable(): MorphTo
     {
         return $this->MorphTo();

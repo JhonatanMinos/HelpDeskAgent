@@ -95,16 +95,19 @@ class Team extends Model
         return $this->hasMany(TeamInvitation::class);
     }
 
+    /** @return HasMany<Store, $this> */
     public function stores(): HasMany
     {
         return $this->hasMany(Store::class);
     }
 
+    /** @return HasMany<Project, $this> */
     public function projects(): HasMany
     {
         return $this->hasMany(Project::class);
     }
 
+    /** @return HasMany<Ticket, $this> */
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);

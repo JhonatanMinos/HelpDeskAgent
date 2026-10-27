@@ -14,16 +14,19 @@ class Task extends Model
         return ['limit_date' => 'date'];
     }
 
+    /** @return BelongsTo<Project, $this> */
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id');
     }
 
+    /** @return BelongsTo<BoardColumn, $this> */
     public function column(): BelongsTo
     {
         return $this->belongsTo(BoardColumn::class, 'boards_column_id');
     }
 
+    /** @return BelongsTo<User, $this> */
     public function assignee(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to');

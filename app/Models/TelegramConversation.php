@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Datebase\Eloquent\Relations\BelongsTo;
 
 #[Fillable([
     'telegram_chat_id',
@@ -17,7 +17,6 @@ use Illuminate\Datebase\Eloquent\Relations\BelongsTo;
 ])]
 class TelegramConversation extends Model
 {
-
     protected function casts(): array
     {
         return [
@@ -25,6 +24,7 @@ class TelegramConversation extends Model
         ];
     }
 
+    /** @return HasMany<TelegramMessage, $this> */
     public function messages(): HasMany
     {
         // orderBy aquí, no en el modelo, para que ->latest() en el
@@ -32,6 +32,7 @@ class TelegramConversation extends Model
         return $this->hasMany(TelegramMessage::class);
     }
 
+    /** @return BelongsTo<Store, $this> */
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);

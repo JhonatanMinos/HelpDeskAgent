@@ -15,21 +15,25 @@ class Project extends Model
         return ['estimated_date_delivery' => 'date'];
     }
 
+    /** @return HasMany<BoardColumn, $this> */
     public function columns(): HasMany
     {
         return $this->hasMany(BoardColumn::class)->orderBy('order');
     }
 
+    /** @return HasMany<Task, $this> */
     public function task(): HasMany
     {
         return $this->hasMany(Task::class);
     }
 
+    /** @return HasMany<Ticket, $this> */
     public function tickets(): HasMany
     {
         return $this->hasMany(Ticket::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by');
