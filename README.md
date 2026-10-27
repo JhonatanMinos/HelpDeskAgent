@@ -79,6 +79,19 @@ El flujo de tiendas se apoya en:
 
 Este módulo es responsable de listar sucursales, mostrar dashboards y ejecutar diagnósticos de red.
 
+Los parámetros de ping se definen en `config/network.php` a partir de estas variables:
+
+```dotenv
+PING_TIMEOUT_MS=800
+PING_COUNT=2
+```
+
+El servicio lee la configuración de Laravel, no el entorno directamente, para conservar
+estos valores con `php artisan config:cache`. Si cambia las variables en un despliegue
+con configuración cacheada, vuelva a generar esa caché. Los argumentos explícitos del
+constructor siguen teniendo prioridad. El tiempo de espera de `ping` se redondea hacia
+arriba a segundos, con un mínimo de un segundo, como antes.
+
 ### Proyectos y Kanban
 
 - [app/Models/Project.php](app/Models/Project.php): proyecto de trabajo.

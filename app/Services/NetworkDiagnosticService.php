@@ -17,8 +17,8 @@ class NetworkDiagnosticService
     {
         // Se resuelve el valor final ANTES de asignarlo, así la propiedad
         // readonly se asigna una sola vez y nunca se reescribe.
-        $this->timeoutMs = $timeoutMs ?? (int) env('PING_TIMEOUT_MS', 800);
-        $this->count = $count ?? (int) env('PING_COUNT', 2);
+        $this->timeoutMs = $timeoutMs ?? (int) config('network.ping_timeout_ms', 800);
+        $this->count = $count ?? (int) config('network.ping_count', 2);
     }
 
     /**
