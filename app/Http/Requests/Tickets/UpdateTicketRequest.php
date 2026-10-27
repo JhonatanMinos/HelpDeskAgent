@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Tickets;
 
+use App\Models\Team;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Exists;
@@ -16,7 +17,9 @@ class UpdateTicketRequest extends FormRequest
     /** @return array<string, list<string|\Closure|Exists>> */
     public function rules(): array
     {
-        $teamId = $this->route('current_team')?->id;
+        $team = $this->route('current_team');
+        abort_unless($team instanceof Team, 404);
+        $teamId = $team->id;
 
         return [
             'title' => ['sometimes', 'required', 'string', 'max:255'],
@@ -35,13 +38,12 @@ class UpdateTicketRequest extends FormRequest
             'assigned_to' => [
                 'nullable',
                 'exists:users,id',
-                function ($attribute, $value, $fail) use ($teamId) {
-                    if ($value === null || $teamId === null) {
+                function ($attribute, $value, $fail) use ($team) {
+                    if ($value === null) {
                         return;
                     }
 
-                    $team = $this->route('current_team');
-                    if ($team && ! $team->members()->whereKey($value)->exists()) {
+                    if (! $team->members()->whereKey($value)->exists()) {
                         $fail('El usuario asignado debe pertenecer al equipo actual.');
                     }
                 },
