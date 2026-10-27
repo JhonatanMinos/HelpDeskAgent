@@ -11,7 +11,7 @@ class DeviceController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(): void
     {
         //
     }
@@ -19,7 +19,7 @@ class DeviceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): void
     {
         //
     }
@@ -27,7 +27,7 @@ class DeviceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreDeviceRequest $request)
+    public function store(StoreDeviceRequest $request): void
     {
         //
     }
@@ -35,7 +35,7 @@ class DeviceController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Device $device)
+    public function show(Device $device): void
     {
         //
     }
@@ -43,7 +43,7 @@ class DeviceController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Device $device)
+    public function edit(Device $device): void
     {
         //
     }
@@ -51,7 +51,7 @@ class DeviceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateDeviceRequest $request, Device $device)
+    public function update(UpdateDeviceRequest $request, Device $device): void
     {
         //
     }
@@ -59,7 +59,7 @@ class DeviceController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Device $device)
+    public function destroy(Device $device): void
     {
         //
     }
