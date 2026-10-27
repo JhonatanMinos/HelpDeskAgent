@@ -70,6 +70,22 @@ class ProjectController extends Controller
         ]);
     }
 
+    public function updateStatus(Team $current_team, Project $project, Request $request): RedirectResponse
+    {
+        abort_unless($project->team_id === $current_team->id, 404);
+
+        $data = $request->validate([
+            'status' => ['required', 'string', 'in:propuesto,activo,pausado,completado'],
+        ]);
+
+        $project->update(['status' => $data['status']]);
+
+        return redirect()->route('dev.projects.show', [
+            'current_team' => $current_team->slug,
+            'project' => $project->id,
+        ])->with('success', 'Estado del proyecto actualizado.');
+    }
+
     /**
      * Show the form for editing the specified resource.
      */

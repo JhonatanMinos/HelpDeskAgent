@@ -92,6 +92,13 @@ El flujo de proyectos se gestiona con:
 
 Permite crear proyectos, columnas y tareas, y mover tareas entre columnas con un comportamiento tipo kanban.
 
+Los miembros autenticados del equipo pueden cambiar el estado de sus proyectos mediante
+`PATCH /{current_team}/dev/projects/{project}/status`, enviando JSON como `{"status":"activo"}`.
+Los valores permitidos son `propuesto`, `activo`, `pausado` y `completado`.
+La acción actualiza únicamente el estado y redirige al detalle del proyecto con un mensaje de confirmación.
+Un estado ausente o inválido devuelve `422`; un proyecto de otro equipo devuelve `404`,
+sin modificar sus datos. No se agregan reglas de transición ni se modifican columnas o tareas.
+
 ### Integración con Telegram
 
 Telegram está **deshabilitado por defecto** mediante `TELEGRAM_ENABLED=false`.
