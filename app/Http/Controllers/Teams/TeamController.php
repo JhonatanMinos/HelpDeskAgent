@@ -17,6 +17,11 @@ use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * \App\Http\Controllers\Teams\TeamController
+ *
+ * @description Presenta equipos, miembros e invitaciones; crea equipos mediante CreateTeam y procesa actualización, cambio de equipo, salida y eliminación según las acciones disponibles.
+ */
 class TeamController extends Controller
 {
     /**

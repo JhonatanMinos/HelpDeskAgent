@@ -7,6 +7,11 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * \App\Http\Controllers\DashboardController
+ *
+ * @description Construye la respuesta Inertia del panel y presenta invitaciones pendientes dirigidas al correo del usuario.
+ */
 class DashboardController extends Controller
 {
     public function __invoke(Request $request): Response

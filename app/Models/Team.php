@@ -15,16 +15,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $slug
- * @property bool $is_personal
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property Carbon|null $deleted_at
- * @property-read Collection<int, TeamInvitation> $invitations
- * @property-read Collection<int, Membership> $memberships
- * @property-read Collection<int, User> $members
+ * App\Models\Team.
+ *
+ * @description Representa un espacio de trabajo con miembros, invitaciones y recursos compartidos.
+ *
+ * Base de datos: `enabled_modules` es JSON nullable sin cast declarado en este modelo.
+ * Comportamiento: genera un slug único al crear el equipo y actualiza el slug cuando cambia el nombre.
+ * Traits: `HasFactory`, `SoftDeletes` y `GeneratesUniqueTeamSlugs`.
+ *
+ * --- Atributos de la base de datos ---
+ *
+ * @property int $id Identificador del equipo.
+ * @property string $name Nombre del equipo.
+ * @property string $slug Identificador legible usado para las rutas.
+ * @property bool $is_personal Indica si es el equipo personal de una persona.
+ * @property string|null $enabled_modules Configuración JSON de módulos habilitados, si está registrada.
+ * @property Carbon|null $created_at Fecha de creación del equipo.
+ * @property Carbon|null $updated_at Fecha de última actualización.
+ * @property Carbon|null $deleted_at Fecha de eliminación lógica.
+ *
+ * --- Relaciones ---
+ * @property-read Collection<int, TeamInvitation> $invitations Invitaciones emitidas para el equipo.
+ * @property-read Collection<int, Membership> $memberships Registros de pertenencia al equipo.
+ * @property-read Collection<int, User> $members Personas integrantes del equipo.
+ * @property-read Collection<int, Store> $stores Tiendas pertenecientes al equipo.
+ * @property-read Collection<int, Project> $projects Proyectos pertenecientes al equipo.
+ * @property-read Collection<int, Ticket> $tickets Tickets pertenecientes al equipo.
  */
 #[Fillable(['name', 'slug', 'is_personal'])]
 class Team extends Model

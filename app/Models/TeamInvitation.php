@@ -12,18 +12,29 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 
 /**
- * @property int $id
- * @property string $code
- * @property int $team_id
- * @property string $email
- * @property TeamRole $role
- * @property int $invited_by
- * @property Carbon|null $expires_at
- * @property Carbon|null $accepted_at
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Team $team
- * @property-read User $inviter
+ * App\Models\TeamInvitation.
+ *
+ * @description Registra una invitación por correo a un equipo, con rol, código de aceptación y fechas de vigencia.
+ *
+ * Comportamiento: genera un código aleatorio al crear la invitación y expone su ruta mediante ese código.
+ * Traits: usa `HasFactory` con `TeamInvitationFactory`.
+ *
+ * --- Atributos de la base de datos ---
+ *
+ * @property int $id Identificador de la invitación.
+ * @property string $code Código único de aceptación.
+ * @property int $team_id Identificador del equipo invitante.
+ * @property string $email Correo electrónico de la persona invitada.
+ * @property TeamRole $role Rol que se asignará al aceptar.
+ * @property int $invited_by Identificador de la persona que envió la invitación.
+ * @property Carbon|null $expires_at Fecha de expiración, si se configuró.
+ * @property Carbon|null $accepted_at Fecha de aceptación, si fue aceptada.
+ * @property Carbon|null $created_at Fecha de creación del registro.
+ * @property Carbon|null $updated_at Fecha de última actualización.
+ *
+ * --- Relaciones ---
+ * @property-read Team $team Equipo al que se refiere la invitación.
+ * @property-read User $inviter Persona que envió la invitación.
  */
 #[Fillable(['team_id', 'email', 'role', 'invited_by', 'expires_at', 'accepted_at'])]
 class TeamInvitation extends Model

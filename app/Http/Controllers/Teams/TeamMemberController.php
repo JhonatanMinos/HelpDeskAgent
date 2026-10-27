@@ -11,6 +11,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Inertia\Inertia;
 
+/**
+ * \App\Http\Controllers\Teams\TeamMemberController
+ *
+ * @description Actualiza el rol validado de un integrante o lo elimina, con autorización mediante las capacidades del equipo.
+ */
 class TeamMemberController extends Controller
 {
     /**

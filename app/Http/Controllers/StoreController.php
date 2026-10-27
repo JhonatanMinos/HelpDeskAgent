@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * \App\Http\Controllers\StoreController
+ *
+ * @description Usa StoreService para listados, estadísticas, actualizaciones y pings, y entrega detalles y registros recientes de las sucursales. checkPrintQueue es una acción pública auxiliar que delega el diagnóstico de impresión, pero no tiene una ruta registrada.
+ */
 class StoreController extends Controller
 {
     public function __construct(

@@ -3,12 +3,47 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
+/**
+ * App\Models\Store.
+ *
+ * @description Representa una sucursal y sus datos de ubicación, red, estado y pertenencia a un equipo.
+ *
+ * --- Atributos de la base de datos ---
+ *
+ * @property int $id Identificador de la tienda.
+ * @property string $store_code Código único de la tienda.
+ * @property string $name Nombre visible de la tienda.
+ * @property string $company Segmento de empresa definido por el esquema.
+ * @property string $base_ip Dirección base usada para derivar IPs de dispositivos.
+ * @property string $status Estado de conectividad de la tienda.
+ * @property Carbon|null $last_seen_at Última fecha de comprobación registrada.
+ * @property int $team_id Identificador del equipo propietario.
+ * @property string $address Dirección de la tienda.
+ * @property string $neighborhood Colonia o vecindario.
+ * @property string $city Municipio o ciudad.
+ * @property string $postal_code Código postal.
+ * @property string $state Estado o región.
+ * @property string|null $lat Latitud geográfica almacenada.
+ * @property string|null $lng Longitud geográfica almacenada.
+ * @property Carbon|null $deleted_at Fecha de eliminación lógica.
+ * @property Carbon|null $created_at Fecha de creación del registro.
+ * @property Carbon|null $updated_at Fecha de última actualización.
+ *
+ * --- Relaciones ---
+ * @property-read Team|null $team Equipo propietario de la tienda.
+ * @property-read Collection<int, Device> $device Dispositivos registrados en la tienda.
+ * @property-read Collection<int, Ticket> $tickets Tickets asociados a la tienda.
+ * @property-read Collection<int, PingLog> $pingLogs Resultados de conectividad asociados a la tienda.
+ * @property-read array<string, string> $device_ips IP calculada para cada clave de dispositivo admitida.
+ */
 #[Fillable(['store_code', 'name', 'company', 'base_ip', 'status', 'last_seen_at', 'team_id', 'address', 'neighborhood', 'city', 'postal_code', 'state', 'lat', 'lng'])]
 class Store extends Model
 {

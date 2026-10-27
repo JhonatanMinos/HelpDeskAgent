@@ -9,14 +9,25 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
- * @property int $team_id
- * @property int $user_id
- * @property TeamRole $role
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Team $team
- * @property-read User $user
+ * App\Models\Membership.
+ *
+ * @description Representa el vínculo entre una persona y un equipo, con el rol asignado en ese equipo.
+ *
+ * --- Atributos de la base de datos ---
+ *
+ * @property int $id Identificador incremental de la membresía.
+ * @property int $team_id Identificador del equipo donde participa la persona.
+ * @property int $user_id Identificador de la persona miembro.
+ * @property TeamRole $role Rol de la persona dentro del equipo.
+ * @property Carbon|null $created_at Fecha de creación de la membresía.
+ * @property Carbon|null $updated_at Fecha de última actualización.
+ *
+ * --- Relaciones ---
+ * @property-read Team $team Equipo asociado a la membresía.
+ * @property-read User $user Persona asociada a la membresía.
+ *
+ * Base de datos: pivote incremental `team_members`, único por equipo y usuario.
+ * Relaciones: `team` y `user` apuntan a los registros vinculados.
  */
 #[Fillable(['team_id', 'user_id', 'role'])]
 class Membership extends Pivot

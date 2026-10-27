@@ -11,6 +11,11 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Laravel\Fortify\Features;
 
+/**
+ * \App\Http\Controllers\Settings\SecurityController
+ *
+ * @description Expone capacidades de Fortify y los datos de passkeys disponibles en la vista, y procesa cambios de contraseña mediante solicitudes validadas.
+ */
 class SecurityController extends Controller
 {
     /**

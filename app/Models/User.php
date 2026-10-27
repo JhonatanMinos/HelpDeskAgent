@@ -17,22 +17,33 @@ use Laravel\Fortify\PasskeyAuthenticatable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 /**
- * @property int $id
- * @property string $name
- * @property string $email
- * @property Carbon|null $email_verified_at
- * @property string $password
- * @property string|null $two_factor_secret
- * @property string|null $two_factor_recovery_codes
- * @property Carbon|null $two_factor_confirmed_at
- * @property string|null $remember_token
- * @property int|null $current_team_id
- * @property Carbon|null $created_at
- * @property Carbon|null $updated_at
- * @property-read Team|null $currentTeam
- * @property-read Collection<int, Team> $ownedTeams
- * @property-read Collection<int, Membership> $teamMemberships
- * @property-read Collection<int, Team> $teams
+ * App\Models\User.
+ *
+ * @description Representa una cuenta autenticable con datos de verificación de correo, segundo factor y pertenencia a equipos.
+ *
+ * Traits: `HasFactory`, `HasTeams`, `Notifiable`, `PasskeyAuthenticatable` y `TwoFactorAuthenticatable` aportan las capacidades declaradas por el modelo.
+ * Seguridad: los campos de contraseña, segundo factor y token de sesión se excluyen de la serialización.
+ *
+ * --- Atributos de la base de datos ---
+ *
+ * @property int $id Identificador de la cuenta.
+ * @property string $name Nombre visible de la persona.
+ * @property string $email Correo electrónico de acceso.
+ * @property Carbon|null $email_verified_at Fecha de verificación del correo.
+ * @property string $password Contraseña almacenada en formato protegido.
+ * @property string|null $two_factor_secret Secreto de segundo factor, si está configurado.
+ * @property string|null $two_factor_recovery_codes Códigos de recuperación del segundo factor.
+ * @property Carbon|null $two_factor_confirmed_at Fecha de confirmación del segundo factor.
+ * @property string|null $remember_token Token de sesión persistente.
+ * @property int|null $current_team_id Identificador del equipo actual, si se seleccionó.
+ * @property Carbon|null $created_at Fecha de creación de la cuenta.
+ * @property Carbon|null $updated_at Fecha de última actualización.
+ *
+ * --- Relaciones ---
+ * @property-read Team|null $currentTeam Equipo actual de la persona.
+ * @property-read Collection<int, Team> $ownedTeams Equipos donde tiene rol de propietario.
+ * @property-read Collection<int, Membership> $teamMemberships Registros de pertenencia a equipos.
+ * @property-read Collection<int, Team> $teams Equipos de los que forma parte.
  */
 #[Fillable(['name', 'email', 'password', 'current_team_id'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
@@ -44,6 +55,7 @@ class User extends Authenticatable implements PasskeyUser
     /**
      * Get the attributes that should be cast.
      * ,
+     *
      * @return array<string, string>
      */
     protected function casts(): array

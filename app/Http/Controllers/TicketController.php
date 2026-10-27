@@ -12,6 +12,11 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * \App\Http\Controllers\TicketController
+ *
+ * @description Lista tickets con sus filtros, muestra el detalle y delega creación, actualización y eliminación a TicketService usando las solicitudes validadas.
+ */
 class TicketController extends Controller
 {
     public function __construct(protected TicketService $ticketService) {}

@@ -8,6 +8,11 @@ use App\Models\Ticket;
 use App\Services\TicketService;
 use Illuminate\Http\RedirectResponse;
 
+/**
+ * \App\Http\Controllers\TicketCommentController
+ *
+ * @description Valida la solicitud, confirma que el ticket pertenezca al equipo seleccionado y delega la creación del comentario a TicketService.
+ */
 class TicketCommentController extends Controller
 {
     public function __construct(protected TicketService $ticketService) {}

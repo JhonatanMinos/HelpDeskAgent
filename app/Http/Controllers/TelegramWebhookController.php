@@ -6,6 +6,11 @@ use App\Services\TelegramBotOrchestrator;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
+/**
+ * \App\Http\Controllers\TelegramWebhookController
+ *
+ * @description Ignora actualizaciones sin texto y delega los mensajes de texto a TelegramBotOrchestrator; la integración continúa incompleta y deshabilitada por defecto.
+ */
 class TelegramWebhookController extends Controller
 {
     public function handle(Request $request, TelegramBotOrchestrator $orchestrator): Response

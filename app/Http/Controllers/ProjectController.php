@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * \App\Http\Controllers\ProjectController
+ *
+ * @description Lista, crea y muestra proyectos, y actualiza su estado; la creación inicializa columnas predeterminadas dentro de una transacción. Las acciones edit, update y destroy permanecen como stubs sin ruta registrada.
+ */
 class ProjectController extends Controller
 {
     /**

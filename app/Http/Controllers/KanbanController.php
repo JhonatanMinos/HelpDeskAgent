@@ -8,6 +8,11 @@ use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 
+/**
+ * \App\Http\Controllers\KanbanController
+ *
+ * @description Atiende la creación de tareas y columnas, y el movimiento de tareas entre columnas con validación del contexto del equipo y del proyecto.
+ */
 class KanbanController extends Controller
 {
     public function storeTask(Team $current_team, Project $project, Request $request): RedirectResponse

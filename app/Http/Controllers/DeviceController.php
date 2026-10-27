@@ -6,6 +6,11 @@ use App\Http\Requests\StoreDeviceRequest;
 use App\Http\Requests\UpdateDeviceRequest;
 use App\Models\Device;
 
+/**
+ * \App\Http\Controllers\DeviceController
+ *
+ * @description Sus acciones CRUD permanecen como stubs vacíos y el recurso no está registrado en las rutas actuales.
+ */
 class DeviceController extends Controller
 {
     /**

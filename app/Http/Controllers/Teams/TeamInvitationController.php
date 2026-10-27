@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Notification;
 use Inertia\Inertia;
 
+/**
+ * \App\Http\Controllers\Teams\TeamInvitationController
+ *
+ * @description Crea y cancela invitaciones, y permite aceptarlas o rechazarlas; delega la validación a solicitudes específicas y usa notificaciones y transacciones en las operaciones correspondientes.
+ */
 class TeamInvitationController extends Controller
 {
     /**

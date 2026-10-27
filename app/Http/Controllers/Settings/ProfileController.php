@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
+/**
+ * \App\Http\Controllers\Settings\ProfileController
+ *
+ * @description Presenta y actualiza los datos del perfil y permite eliminar la cuenta; la bandera de verificación depende de la implementación de MustVerifyEmail del usuario.
+ */
 class ProfileController extends Controller
 {
     /**
