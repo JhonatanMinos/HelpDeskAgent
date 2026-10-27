@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Tickets\StoreTicketRequest;
 use App\Http\Requests\Tickets\UpdateTicketRequest;
-use App\Models\Store;
 use App\Models\Team;
 use App\Models\Ticket;
 use App\Services\TicketService;
@@ -51,7 +50,7 @@ class TicketController extends Controller
         return Inertia::render('tickets/index', [
             'tickets' => $tickets,
             'filters' => $filters,
-            'stores' => Store::select('id', 'name')->with('tickets')->get(),
+            'stores' => $current_team->stores()->select('id', 'name')->get(),
             'teamMembers' => $current_team->members()->select('users.id', 'users.name')->get(),
         ]);
     }

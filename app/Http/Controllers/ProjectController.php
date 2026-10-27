@@ -59,10 +59,12 @@ class ProjectController extends Controller
      */
     public function show(Team $current_team, Project $project)
     {
+        abort_unless($project->team_id === $current_team->id, 404);
+
         return Inertia::render('projects/show', [
             'project' => $project,
             'columns' => $project->columns()->with([
-                'tasks' => fn($q) => $q->with('assignee:id,name')->orderBy('order'),
+                'tasks' => fn ($q) => $q->with('assignee:id,name')->orderBy('order'),
             ])->get(),
         ]);
     }

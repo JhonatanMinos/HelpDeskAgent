@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Store;
+use App\Models\Team;
 use Illuminate\Database\Eloquent\Collection;
 
 class StoreRepository
@@ -12,39 +13,44 @@ class StoreRepository
         'south' => [],
     ];
 
-    public function getAll(?string $search = null)
+    public function getAll(?string $search = null, ?Team $team = null)
     {
         return Store::query()
+            ->when($team, fn ($query) => $query->where('team_id', $team->id))
             ->with('device')
             ->when($search, function ($query) use ($search) {
-                $query->where('name', 'like', "%{$search}%")
-                    ->orWhere('store_code', 'like', "%{$search}%");
+                $query->where(function ($query) use ($search) {
+                    $query->where('name', 'like', "%{$search}%")
+                        ->orWhere('store_code', 'like', "%{$search}%");
+                });
             })
             ->paginate(8)
             ->withQueryString();
     }
 
-    public function getDashboard(): array
+    public function getDashboard(?Team $team = null): array
     {
         return [
-            'total' => Store::count(),
-            'online' => Store::where('status', 'online')->count(),
-            'company' => $this->countByCompany(),
-            'states' => $this->countByStates(),
+            'total' => Store::query()->when($team, fn ($query) => $query->where('team_id', $team->id))->count(),
+            'online' => Store::query()->where('status', 'online')->when($team, fn ($query) => $query->where('team_id', $team->id))->count(),
+            'company' => $this->countByCompany($team),
+            'states' => $this->countByStates($team),
         ];
     }
 
-    private function countByCompany(): array
+    private function countByCompany(?Team $team = null): array
     {
         return Store::selectRaw('company, COUNT(*) as total')
+            ->when($team, fn ($query) => $query->where('team_id', $team->id))
             ->groupBy('company')
             ->get()
             ->toArray();
     }
 
-    private function countByStates(): Collection
+    private function countByStates(?Team $team = null): Collection
     {
         return Store::query()
+            ->when($team, fn ($query) => $query->where('team_id', $team->id))
             ->selectRaw('state, COUNT(*) as total')
             ->groupBy('state')
             ->orderByDesc('total')
