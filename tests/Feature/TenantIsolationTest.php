@@ -20,6 +20,21 @@ class TenantIsolationTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_global_refresh_command_preserves_feedback_and_dispatches_all_stores(): void
+    {
+        $firstStore = $this->createStore(Team::factory()->create(), 'First store');
+        $secondStore = $this->createStore(Team::factory()->create(), 'Second store');
+        Queue::fake();
+
+        $this->artisan('branches:refresh-status')
+            ->expectsOutputToContain('Refresh de status despachado para todas las tiendas.')
+            ->assertExitCode(0);
+
+        Queue::assertPushed(RefreshStoreStatusJob::class, 2);
+        Queue::assertPushed(RefreshStoreStatusJob::class, fn ($job) => $job->store->is($firstStore));
+        Queue::assertPushed(RefreshStoreStatusJob::class, fn ($job) => $job->store->is($secondStore));
+    }
+
     public function test_rejected_cross_team_requests_preserve_database_state_and_dispatch_nothing(): void
     {
         [$user, $team] = $this->userAndTeam();

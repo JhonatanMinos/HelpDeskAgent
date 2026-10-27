@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\PingLog;
 use App\Models\Store;
 use Illuminate\Support\Facades\Log;
 use Symfony\Component\Process\Process;
@@ -24,6 +25,8 @@ class NetworkDiagnosticService
      * Hace ping a la IP principal de la tienda (ajusta a tu campo real,
      * ej: $store->ip_red o $store->ipForDevice(...) si ya calculas IPs
      * por dispositivo como vimos antes) y actualiza status + last_seen_at.
+     *
+     * @return array<string, PingLog>
      */
     public function pingStore(Store $store): array
     {
@@ -60,6 +63,8 @@ class NetworkDiagnosticService
     /**
      * Ping real vía Symfony\Process (nunca shell_exec/exec crudo, por
      * riesgo de inyección de comandos si algún día la IP viene de input).
+     *
+     * @return array{is_online: bool, latency_ms: int|null}
      */
     public function pingIp(string $ip): array
     {
@@ -93,6 +98,9 @@ class NetworkDiagnosticService
         return ['is_online' => $isOnline, 'latency_ms' => $latency];
     }
 
+    /**
+     * @return array{servidor_ip: string, servidor_online: bool, compartida_puerto_abierto: bool, protocolo: string, estado: 'servidor_caido'|'compartir_caido'|'ok', checked_at: string}
+     */
     public function checkPrintChain(Store $store, string $shareProtocol = 'smb'): array
     {
         $servidorIp = $store->ipForDevice('servidor');

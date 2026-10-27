@@ -11,6 +11,7 @@ class StoreTicketCommentRequest extends FormRequest
         return true;
     }
 
+    /** @return array<string, list<string|\Closure>> */
     public function rules(): array
     {
         return [

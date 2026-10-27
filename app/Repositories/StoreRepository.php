@@ -5,15 +5,15 @@ namespace App\Repositories;
 use App\Models\Store;
 use App\Models\Team;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
+/**
+ * @phpstan-type StoreDashboard array{total: int, online: int, company: array<int, array<string, mixed>>, states: Collection<int, Store>}
+ */
 class StoreRepository
 {
-    private const REGIONS = [
-        'north' => [],
-        'south' => [],
-    ];
-
-    public function getAll(?string $search = null, ?Team $team = null)
+    /** @return LengthAwarePaginator<int, Store> */
+    public function getAll(?string $search = null, ?Team $team = null): LengthAwarePaginator
     {
         return Store::query()
             ->when($team, fn ($query) => $query->where('team_id', $team->id))
@@ -28,6 +28,7 @@ class StoreRepository
             ->withQueryString();
     }
 
+    /** @return StoreDashboard */
     public function getDashboard(?Team $team = null): array
     {
         return [
@@ -38,6 +39,7 @@ class StoreRepository
         ];
     }
 
+    /** @return array<int, array<string, mixed>> */
     private function countByCompany(?Team $team = null): array
     {
         return Store::selectRaw('company, COUNT(*) as total')
@@ -47,6 +49,7 @@ class StoreRepository
             ->toArray();
     }
 
+    /** @return Collection<int, Store> */
     private function countByStates(?Team $team = null): Collection
     {
         return Store::query()

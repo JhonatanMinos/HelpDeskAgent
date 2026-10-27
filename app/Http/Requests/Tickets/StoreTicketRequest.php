@@ -4,6 +4,7 @@ namespace App\Http\Requests\Tickets;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Exists;
 
 class StoreTicketRequest extends FormRequest
 {
@@ -12,6 +13,7 @@ class StoreTicketRequest extends FormRequest
         return true;
     }
 
+    /** @return array<string, list<string|\Closure|Exists>> */
     public function rules(): array
     {
         $teamId = $this->route('current_team')?->id;
@@ -38,7 +40,7 @@ class StoreTicketRequest extends FormRequest
                     }
 
                     $team = $this->route('current_team');
-                    if ($team && !$team->members()->whereKey($value)->exists()) {
+                    if ($team && ! $team->members()->whereKey($value)->exists()) {
                         $fail('El usuario asignado debe pertenecer al equipo actual.');
                     }
                 },

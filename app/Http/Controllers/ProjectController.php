@@ -6,6 +6,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\Team;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -31,7 +32,7 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Team $current_team, StoreProjectRequest $request)
+    public function store(Team $current_team, StoreProjectRequest $request): RedirectResponse
     {
         $data = $request->validated();
 
@@ -57,7 +58,7 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Team $current_team, Project $project)
+    public function show(Team $current_team, Project $project): Response
     {
         abort_unless($project->team_id === $current_team->id, 404);
 

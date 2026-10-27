@@ -2,16 +2,17 @@
 
 namespace App\Services;
 
+use App\Models\Team;
 use App\Models\Ticket;
 use App\Models\TicketActivity;
 use App\Models\TicketComment;
-use App\Models\Team;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
 class TicketService
 {
+    /** @param array<string, mixed> $data */
     public function createTicket(Team $team, array $data, User $creator): Ticket
     {
         $this->validateTeamScopedRelations($team, $data);
@@ -29,13 +30,14 @@ class TicketService
                 'created',
                 null,
                 null,
-                "Ticket creado",
+                'Ticket creado',
             );
 
             return $ticket;
         });
     }
 
+    /** @param array<string, mixed> $data */
     public function updateTicket(Ticket $ticket, array $data, User $user, Team $team): Ticket
     {
         $this->validateTeamScopedRelations($team, $data);
@@ -130,28 +132,29 @@ class TicketService
         ]);
     }
 
+    /** @param array<string, mixed> $data */
     protected function validateTeamScopedRelations(Team $team, array $data): void
     {
         if (array_key_exists('store_id', $data) && $data['store_id'] !== null) {
-            if (!$team->stores()->whereKey($data['store_id'])->exists()) {
+            if (! $team->stores()->whereKey($data['store_id'])->exists()) {
                 throw ValidationException::withMessages(['store_id' => 'La sucursal debe pertenecer al equipo actual.']);
             }
         }
 
         if (array_key_exists('project_id', $data) && $data['project_id'] !== null) {
-            if (!$team->projects()->whereKey($data['project_id'])->exists()) {
+            if (! $team->projects()->whereKey($data['project_id'])->exists()) {
                 throw ValidationException::withMessages(['project_id' => 'El proyecto debe pertenecer al equipo actual.']);
             }
         }
 
         if (array_key_exists('assigned_to', $data) && $data['assigned_to'] !== null) {
-            if (!$team->members()->whereKey($data['assigned_to'])->exists()) {
+            if (! $team->members()->whereKey($data['assigned_to'])->exists()) {
                 throw ValidationException::withMessages(['assigned_to' => 'El usuario asignado debe ser miembro del equipo actual.']);
             }
         }
     }
 
-    protected function normalizeValue($value): ?string
+    protected function normalizeValue(mixed $value): ?string
     {
         if (is_bool($value)) {
             return $value ? 'true' : 'false';

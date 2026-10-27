@@ -22,14 +22,6 @@ class Store extends Model
         'caja_2' => 102,
     ];
 
-    private const DEVICE_LABELS = [
-        'vpn' => 'VPN (TP-Link)',
-        'checador' => 'Checador ZKTeco',
-        'servidor' => 'Servidor Local',
-        'caja_1' => 'Caja de Cobro 1',
-        'caja_2' => 'Caja de Cobro 2',
-    ];
-
     protected function casts(): array
     {
         return [
