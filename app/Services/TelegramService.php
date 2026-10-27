@@ -13,12 +13,17 @@ class TelegramService
 
     public function __construct(?string $botToken = null)
     {
-        $this->botToken = $botToken ?: env('TELEGRAM_BOT_TOKEN', '');
+        $configuredToken = config('services.telegram.bot_token', '');
+        $this->botToken = $botToken ?: (is_string($configuredToken) ? $configuredToken : '');
         $this->apiUrl = "https://api.telegram.org/bot{$this->botToken}";
     }
 
     public function sendMessage(string $chatId, string $text): bool
     {
+        if (! $this->canSendRequests()) {
+            return false;
+        }
+
         try {
             $response = Http::post("{$this->apiUrl}/sendMessage", [
                 'chat_id' => $chatId,
@@ -43,11 +48,20 @@ class TelegramService
      */
     public function setWebhook(string $url, string $secretToken): bool
     {
+        if (! $this->canSendRequests()) {
+            return false;
+        }
+
         $response = Http::post("{$this->apiUrl}/setWebhook", [
             'url' => $url,
             'secret_token' => $secretToken,
         ]);
 
         return $response->successful();
+    }
+
+    private function canSendRequests(): bool
+    {
+        return config('services.telegram.enabled') === true && $this->botToken !== '';
     }
 }

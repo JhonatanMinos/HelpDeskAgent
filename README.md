@@ -94,13 +94,28 @@ Permite crear proyectos, columnas y tareas, y mover tareas entre columnas con un
 
 ### Integración con Telegram
 
-El proyecto también incluye integración con Telegram a través de:
+Telegram está **deshabilitado por defecto** mediante `TELEGRAM_ENABLED=false`.
+Se conserva el código, pero sus servicios de IA y escalamiento todavía están incompletos:
 
 - [app/Services/TelegramService.php](app/Services/TelegramService.php)
 - [app/Services/TelegramBotOrchestrator.php](app/Services/TelegramBotOrchestrator.php)
 - [app/Http/Controllers/TelegramWebhookController.php](app/Http/Controllers/TelegramWebhookController.php)
 
-Esto permite recibir eventos o mensajes desde Telegram y procesarlos dentro del sistema.
+Mientras esté deshabilitado, el webhook devuelve `404` antes de resolver el orquestador,
+`TelegramService` no hace llamadas externas y `php artisan telegram:set-webhook`
+termina con un mensaje de deshabilitación y código de salida `1`.
+
+Las credenciales se leen desde `config/services.php` (`TELEGRAM_BOT_TOKEN` y
+`TELEGRAM_WEBHOOK_SECRET`). No habilite Telegram hasta completar y verificar sus dependencias.
+Al desplegar este cambio, actualice las cachés de configuración y rutas; en desarrollo:
+
+```bash
+php artisan config:clear
+php artisan route:clear
+```
+
+Esto no borra conversaciones ni desregistra un webhook previamente configurado en Telegram:
+no se realiza ninguna operación remota.
 
 ## Persistencia y base de datos
 
