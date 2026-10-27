@@ -1,4 +1,4 @@
-import type { Table } from '@tanstack/react-table';
+import type { Row, Table } from '@tanstack/react-table';
 import { flexRender } from '@tanstack/react-table';
 import {
 	TableBody,
@@ -9,12 +9,12 @@ import {
 	Table as UITable,
 } from '@/components/ui/table';
 
-interface TableGenericProps<T> {
-	table: Table<T>;
-	rowClassName: (row: Row<TData>) => string;
+interface TableGenericProps<TData> {
+	table: Table<TData>;
+	rowClassName?: (row: Row<TData>) => string;
 }
 
-export default function TableGeneric<T>({ table, rowClassName }: TableGenericProps<T>) {
+export default function TableGeneric<TData>({ table, rowClassName }: TableGenericProps<TData>) {
 	return (
 		<div className="overflow-x-auto overflow-y-auto rounded-lg border">
 			<UITable className="table-auto border">

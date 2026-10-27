@@ -1,4 +1,5 @@
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Plus, SendHorizontal, Ticket as TicketIcon } from 'lucide-react';
 import { PaginationGeneric } from '@/components/paginationUI';
 import { Badge } from '@/components/ui/badge';
@@ -33,7 +34,7 @@ interface PaginationData<T> {
 	next_page_url: string | null;
 }
 
-interface PageProps {
+interface PageProps extends InertiaPageProps {
 	tickets: PaginationData<TicketSummary>;
 	stores: Array<{ id: number; name: string }>;
 	projects: Array<{ id: number; name: string }>;

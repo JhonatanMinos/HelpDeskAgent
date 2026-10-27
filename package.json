@@ -6,6 +6,7 @@
 		"build": "vite build",
 		"build:ssr": "vite build && vite build --ssr",
 		"dev": "vite",
+		"test:frontend": "bun test tests/frontend",
 		"format": "biome --write resources/",
 		"format:check": "biome --check resources/",
 		"lint": "biome check . --fix",
