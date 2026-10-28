@@ -15,7 +15,6 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { useStatePing } from '@/hooks/use-store-ping';
 import { NetworkTopology } from '@/pages/branches/network-topology';
@@ -50,7 +49,7 @@ interface PingHistoryRow {
 	checked_at: string;
 }
 
-interface Printer {
+interface StorePrinter {
 	id: number;
 	name: string;
 	modelo: string | null;
@@ -60,7 +59,7 @@ interface Printer {
 interface PageProps {
 	store: StoreDetail;
 	deviceIps: Record<DeviceKey, string>;
-	printers: Printer[];
+	printers: StorePrinter[];
 	recentPings: PingHistoryRow[];
 }
 
@@ -81,12 +80,12 @@ function StatusBadge({ status }: { status: StoreDetail['status'] }) {
 			className: 'bg-emerald-500/15 text-emerald-500 border-emerald-500/30',
 		},
 		offline: {
-			label: 'Offline',
+			label: 'Sin conexión',
 			className: 'bg-red-500/15 text-red-500 border-red-500/30',
 		},
 		unknown: {
-			label: 'Unknown',
-			className: 'bg-muted text-muted-foreground',
+			label: 'Sin verificar',
+			className: 'bg-amber-500/10 text-amber-700 border-amber-500/20 dark:text-amber-300',
 		},
 	} as const;
 	const { label, className } = map[status];
@@ -129,17 +128,20 @@ export default function ShowStore({ store, deviceIps, printers, recentPings }: P
 		<>
 			<Head title={store.name} />
 
-			<div className="flex flex-col gap-6 p-4">
-				<div className="flex items-center justify-between">
+			<div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-6">
+				<div className="flex flex-wrap items-center justify-between gap-4">
 					<div className="flex items-center gap-3">
 						<Button variant="ghost" size="icon" asChild>
-							<Link href={branches({ current_team: currentTeam.slug }).url}>
+							<Link
+								aria-label="Volver a sucursales"
+								href={branches({ current_team: currentTeam.slug }).url}
+							>
 								<ArrowLeft size={16} />
 							</Link>
 						</Button>
 						<div>
-							<div className="flex items-center gap-2">
-								<h1 className="text-xl font-semibold">{store.name}</h1>
+							<div className="flex flex-wrap items-center gap-2">
+								<h1 className="text-2xl font-semibold tracking-tight">{store.name}</h1>
 								<StatusBadge status={store.status} />
 							</div>
 							<p className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -154,38 +156,56 @@ export default function ShowStore({ store, deviceIps, printers, recentPings }: P
 						</div>
 					</div>
 
-					<Button onClick={() => pingStore(store.id)} disabled={pinging}>
+					<Button onClick={() => pingStore(store.id)} disabled={pinging} aria-busy={pinging}>
 						{pinging ? <Loader2 className="animate-spin" size={16} /> : <Radar size={16} />}
-						{pinging ? 'Pingueando...' : 'Ping ahora'}
+						{pinging ? 'Comprobando...' : 'Comprobar conexión'}
 					</Button>
 				</div>
 
-				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-6">
+				<div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border bg-card px-5 py-3 text-xs text-muted-foreground">
+					<span>
+						{store.address ?? 'Sin dirección registrada'} · {store.base_ip}
+					</span>
+					<span>
+						Última comprobación:{' '}
+						{store.last_seen_at ? (
+							<time dateTime={store.last_seen_at}>
+								{new Date(store.last_seen_at).toLocaleString('es-MX')}
+							</time>
+						) : (
+							'Sin comprobaciones'
+						)}
+					</span>
+				</div>
+				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
 					{DEVICE_KEYS.map((key) => {
 						const Icon = DEVICE_ICON[key];
 						const device = deviceIps[key];
 						return (
-							<Card key={key}>
+							<Card key={key} className="gap-3 shadow-none">
 								<CardHeader className="pb-2">
-									<div className="flex items-center gap-2 text-xl font-medium">
-										<Icon size={36} className="text-muted-foreground" />
+									<div className="flex items-center gap-2 text-sm font-medium">
+										<Icon size={20} className="text-primary" />
 										{key}
 									</div>
 								</CardHeader>
 								<CardContent>
-									<code className="text-xs text-muted-foreground">{device}</code>
+									<code className="rounded-md bg-muted px-2 py-1 text-sm">{device}</code>
 								</CardContent>
 							</Card>
 						);
 					})}
 					<Card>
 						<CardHeader>
-							<CardTitle className="flex items-center gap-2 text-xl font-medium">
-								<Printer size={36} className="text-muted-foreground" />
+							<CardTitle className="flex items-center gap-2 text-sm font-medium">
+								<Printer size={20} className="text-primary" />
 								Impresoras
 							</CardTitle>
 						</CardHeader>
 						<CardContent className="space-y-2">
+							{printers.length === 0 && (
+								<p className="text-sm text-muted-foreground">Sin impresoras registradas.</p>
+							)}
 							{printers.map((printer) => (
 								<div key={printer.id} className="flex items-center justify-between text-sm">
 									<div>
@@ -216,24 +236,26 @@ export default function ShowStore({ store, deviceIps, printers, recentPings }: P
 							{recentPings.length === 0 ? (
 								<p className="text-sm text-muted-foreground">Sin registros todavía.</p>
 							) : (
-								<div className="divide-y rounded-md border">
-									{recentPings.map((row, i) => (
-										<div key={i} className="flex items-center px-4 py-3">
-											<div className="flex min-w-[220px] items-center gap-2">
+								<div className="divide-y rounded-lg border">
+									{recentPings.map((row) => (
+										<div
+											key={`${row.checked_at}:${row.device_label}:${row.is_online}:${row.latency_ms}`}
+											className="flex flex-wrap items-center gap-3 px-4 py-3"
+										>
+											<div className="flex min-w-24 items-center gap-2">
 												{row.is_online ? (
-													<Wifi size={22} className="text-emerald-500" />
+													<Wifi size={16} className="text-emerald-500" />
 												) : (
-													<WifiOff size={22} className="text-red-500" />
+													<WifiOff size={16} className="text-red-500" />
 												)}
 												<span className="truncate font-medium">{row.device_label}</span>
 											</div>
 											<div className="flex flex-1 items-center gap-3">
-												<Progress value={row.latency_ms} className="flex-1" />
 												<span className="w-14 text-right text-sm font-medium">
-													{row.latency_ms} ms
+													{row.latency_ms == null ? '—' : `${row.latency_ms} ms`}
 												</span>
 											</div>
-											<div className="w-44 text-right text-xs text-muted-foreground">
+											<div className="text-xs text-muted-foreground sm:ml-auto sm:text-right">
 												{new Date(row.checked_at).toLocaleString('es-MX')}
 											</div>{' '}
 										</div>

@@ -1,11 +1,4 @@
-import {
-	ChevronsLeftRightEllipsis,
-	CreditCard,
-	Fingerprint,
-	Network,
-	Router,
-	Server,
-} from 'lucide-react';
+import { CreditCard, Fingerprint, Network, Router, Server } from 'lucide-react';
 
 type DeviceStatus = 'online' | 'warning' | 'offline' | 'unknown';
 
@@ -29,7 +22,7 @@ const STATUS_COLOR: Record<DeviceStatus, string> = {
 	online: '#10b981', // emerald-500
 	warning: '#f59e0b', // amber-500
 	offline: '#ef4444', // red-500
-	unknown: '#6b7280', // gray-500
+	unknown: '#d97706', // amber-600
 };
 
 const ICONS: Record<string, React.ElementType> = {
@@ -70,7 +63,7 @@ function StoreNode({ node }: { node: DeviceNode }) {
 				stroke={node.status === 'offline' ? color : 'var(--border)'}
 				strokeWidth={node.status === 'offline' ? 2 : 1}
 			/>
-			<circle cx={NODE_WIDTH - 12} cy={12} r={5} fill={color} className="animate-pulse" />
+			<circle cx={NODE_WIDTH - 12} cy={12} r={5} fill={color} />
 			<foreignObject x={12} y={10} width={24} height={24}>
 				<Icon size={18} className="text-muted-foreground" />
 			</foreignObject>
@@ -142,33 +135,43 @@ function Link({
 			strokeWidth={2}
 			strokeDasharray={dashed ? '6 4' : undefined}
 			opacity={status === 'unknown' ? 0.3 : 0.8}
-			className="animate-pulse"
 		/>
 	);
 }
 
 export function NetworkTopology({ vpn, checador, servidor, caja1, caja2 }: Props) {
 	return (
-		<div className="rounded-xl border bg-card p-4">
-			<div className="mb-3 flex items-center justify-between">
+		<div className="min-w-0 rounded-xl border bg-card p-5">
+			<div className="mb-4 flex flex-wrap items-center justify-between gap-3">
 				<div className="flex items-center gap-2 text-sm font-medium">
 					<Network size={16} className="text-muted-foreground" />
-					Topología de Red
+					Topología de red
 				</div>
 				<div className="flex items-center gap-3 text-xs text-muted-foreground">
 					<span className="flex items-center gap-1">
-						<span className="h-2 w-2 rounded-full bg-emerald-500" /> Online
+						<span className="h-2 w-2 rounded-full bg-emerald-500" /> En línea
 					</span>
 					<span className="flex items-center gap-1">
 						<span className="h-2 w-2 rounded-full bg-amber-500" /> Alerta
 					</span>
 					<span className="flex items-center gap-1">
-						<span className="h-2 w-2 rounded-full bg-red-500" /> Offline
+						<span className="h-2 w-2 rounded-full bg-red-500" /> Sin conexión
+					</span>
+					<span className="flex items-center gap-1">
+						<span className="h-2 w-2 rounded-full bg-amber-600" /> Sin verificar
 					</span>
 				</div>
 			</div>
+			<p className="mb-3 text-xs text-muted-foreground">
+				Resultados de las últimas comprobaciones registradas por dispositivo.
+			</p>
 
-			<svg viewBox="0 0 700 420" className="h-auto w-full">
+			<svg
+				viewBox="0 0 700 420"
+				className="h-auto w-full"
+				role="img"
+				aria-label="Topología de red y estado registrado de los dispositivos"
+			>
 				{/* Líneas primero, para que queden debajo de los nodos */}
 				<Link from="vpn" to="switch" status={vpn.status} />
 				<Link from="switch" to="servidor" status={servidor.status} />

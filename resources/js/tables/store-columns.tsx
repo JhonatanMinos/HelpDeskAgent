@@ -7,7 +7,6 @@ import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useStatePing } from '@/hooks/use-store-ping';
@@ -18,16 +17,16 @@ export function getStoreColumns(currentTeamSlug: string): ColumnDef<Store>[] {
 	return [
 		{
 			accessorKey: 'store_code',
-			header: 'Codigo',
+			header: 'Código',
 			cell: ({ row }) => <Badge variant="secondary">{row.getValue('store_code')}</Badge>,
 		},
 		{
 			accessorKey: 'name',
-			header: 'name',
+			header: 'Sucursal',
 		},
 		{
 			accessorKey: 'base_ip',
-			header: 'Base IP',
+			header: 'IP base',
 			cell: ({ row }) => <div className="text-muted-foreground">{row.getValue('base_ip')}</div>,
 		},
 		{
@@ -37,21 +36,25 @@ export function getStoreColumns(currentTeamSlug: string): ColumnDef<Store>[] {
 				const value = row.getValue<Store['status']>('status');
 
 				const colors = {
-					online: 'bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300',
-					offline: 'bg-gray-50 text-gray-700 dark:bg-gray-950 dark:text-gray-300',
-					unknown: 'bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300',
+					online: 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300',
+					offline: 'bg-rose-500/10 text-rose-700 dark:text-rose-300',
+					unknown: 'bg-amber-500/10 text-amber-700 dark:text-amber-300',
 				};
 
 				const colorsDot = {
-					online: 'bg-green-600',
-					offline: 'bg-gray-600',
-					unknown: 'bg-red-600',
+					online: 'bg-emerald-500',
+					offline: 'bg-rose-500',
+					unknown: 'bg-amber-500',
 				};
 
 				return (
-					<Badge variant="secondary" className={`px-2.5 capitalize ${colors[value] ?? ''}`}>
+					<Badge
+						title={value}
+						variant="secondary"
+						className={`gap-1.5 px-2.5 ${colors[value] ?? ''}`}
+					>
 						<span className={`h-2 w-2 rounded-full ${colorsDot[value]}`} />
-						{value}
+						{{ online: 'En línea', offline: 'Sin conexión', unknown: 'Sin verificar' }[value]}
 					</Badge>
 				);
 			},
@@ -60,7 +63,9 @@ export function getStoreColumns(currentTeamSlug: string): ColumnDef<Store>[] {
 			accessorKey: 'state',
 			header: 'Estado',
 			cell: ({ row }) => (
-				<Badge className="bg-blue-950 text-gray-300">{row.getValue('state')}</Badge>
+				<Badge variant="outline" className="font-normal text-muted-foreground">
+					{row.getValue('state')}
+				</Badge>
 			),
 		},
 		{
@@ -83,10 +88,10 @@ function StoreRowActions({ store, currentTeamSlug }: { store: Store; currentTeam
 						size="icon"
 					>
 						<EllipsisVertical />
-						<span className="sr-only">Open menu</span>
+						<span className="sr-only">Acciones de sucursal</span>
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end" className="w-32">
+				<DropdownMenuContent align="end" className="w-48">
 					<DropdownMenuItem asChild>
 						<Link
 							href={
@@ -108,11 +113,8 @@ function StoreRowActions({ store, currentTeamSlug }: { store: Store; currentTeam
 						disabled={pinging}
 					>
 						{pinging ? <Loader2 className="animate-spin" size={14} /> : <Radar size={14} />}
-						{pinging ? 'Pingueando...' : 'Ping ahora'}
+						{pinging ? 'Comprobando...' : 'Comprobar conexión'}
 					</DropdownMenuItem>
-					<DropdownMenuItem>Favorite</DropdownMenuItem>
-					<DropdownMenuSeparator />
-					<DropdownMenuItem variant="destructive">Delete</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>

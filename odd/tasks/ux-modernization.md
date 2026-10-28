@@ -19,7 +19,7 @@ Branch: refactor/project-foundations. Delivery: integrated single feature branch
 - T5 [S3] delegated, implemented/verified: account/auth/team/entry UX, independent parallel behavior unit with disjoint surfaces.
 - T6 [S1-S3] inline plus independent verifier for shared contracts/security, pending: seam checks, scoped review consent and delivery decision.
 
-- T7 [S4] inline, implemented/verified: honest shared pagination, empty-table feedback, keyboard skip navigation and error contrast.
+- T7 [S4] inline, implemented/verified: honest shared pagination, empty-table feedback, keyboard skip navigation and error contrast; pagination/table commit8aac8db, shell/CSS in1f18165.
 
 - T8 [S5] inline, in progress: package shared pagination, branches, workspaces, accounts and entry page with their matching tests; no application behavior changes.
 
@@ -42,3 +42,4 @@ Branch: refactor/project-foundations. Delivery: integrated single feature branch
 - L15 Continued local authorized delivery: shell/theme/navigation saved in1f18165, 12 paths406 lines. Native committed-only assessment against56c5f64: medium, review_due=false, reasonunder_budget; no START/review requested. Untracked inventory changed after commit, refreshed canonically and excluded; final digest7464034752c8e8fa550b0f1bdd17669aa9a12b83d4ea80e1911866e4373cd1c3. Remaining branch/workspace/account/pagination-polish changes are implemented/verified but not committed; preserve their worktree state and unrelated baseline changes. No push/PR/merge or extra branches.
 - L16 2026-10-28 User: "2", selecting the immediately preceding option "Guardar los cambios restantes en commits". This is NOT another review decline; the earlier dashboard decline remains candidate-scoped.
 - L17 Packaging order: shared pagination/table first (branch consumer depends on optional empty-state props), then branches, ticket/project workspaces, account layouts/team settings, and entry page. Split existing account SSR tests by tested behavior so each local work unit is self-contained. Keep all assertions; no new feature work. Visual/browser QA remains explicitly deferred and unrelated original dirty files remain excluded.
+- L18 Packaging check: frontend24 tests172 assertions and TypeScript exit0 after relocating welcome SSR assertions into their own file (same assertions, no product behavior changes; no meaningful new RED). Shared pagination/table unit8aac8db saved with its tests and tracking; native cumulative slice56c5f64..8aac8db medium,645 lines, review_due=false/under_budget. Dashboard decline unchanged; no new review started.

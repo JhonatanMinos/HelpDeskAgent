@@ -1,7 +1,8 @@
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, router, usePage } from '@inertiajs/react';
 import { getCoreRowModel, useReactTable } from '@tanstack/react-table';
+import { Building2 } from 'lucide-react';
 import { useState } from 'react';
-import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { PaginationGeneric } from '@/components/paginationUI';
 import PendingInvitationsModal from '@/components/pending-invitations-modal';
 import { StoreStatsCards } from '@/components/stores/store-stats-cards';
@@ -74,27 +75,51 @@ export default function StoreDashboard({ pendingInvitations = [] }: PageProps) {
 				onOpenChange={setShowInvitations}
 			/>
 
-			<div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
+			<div className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-6 p-4 md:p-6">
+				<header className="flex flex-wrap items-center justify-between gap-3">
+					<div>
+						<p className="mb-1 text-xs font-semibold uppercase tracking-widest text-primary">
+							Operación de sucursales
+						</p>
+						<h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Sucursales</h1>
+						<p className="mt-2 text-sm text-muted-foreground">
+							Consulta el estado registrado y accede al diagnóstico de cada ubicación.
+						</p>
+					</div>
+					<Building2 className="hidden size-9 text-primary/40 sm:block" />
+				</header>
 				<StoreStatsCards
 					total={dashboard.total}
 					onlineCount={dashboard.online}
 					companys={dashboard.company}
 				/>
 
-				<StoreToolbar
-					search={search}
-					onSearchChange={setSearch}
-					onRefresh={handleRefreshAll}
-					refreshing={refreshing}
-				/>
+				<section className="rounded-xl border bg-card p-4">
+					<StoreToolbar
+						search={search}
+						onSearchChange={setSearch}
+						onRefresh={handleRefreshAll}
+						refreshing={refreshing}
+					/>
+				</section>
 
-				<div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
+				<div className="min-w-0 overflow-hidden rounded-xl border bg-card">
 					<TableGeneric
 						table={table}
+						emptyTitle={
+							search ? 'No hay sucursales que coincidan' : 'No hay sucursales registradas'
+						}
+						emptyDescription={
+							search
+								? 'Prueba con otro nombre o código de sucursal.'
+								: 'Las sucursales de tu equipo aparecerán aquí.'
+						}
 						rowClassName={(row) =>
-							row.original.status === 'unknown' || row.original.status === 'offline'
-								? 'bg-red-50 hover:bg-red-100 dark:bg-red-950/70'
-								: ''
+							row.original.status === 'offline'
+								? 'bg-rose-500/5 hover:bg-rose-500/10'
+								: row.original.status === 'unknown'
+									? 'bg-amber-500/5 hover:bg-amber-500/10'
+									: ''
 						}
 					/>
 					<PaginationGeneric pagination={stores} />
