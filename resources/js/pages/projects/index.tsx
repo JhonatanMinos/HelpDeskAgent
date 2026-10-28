@@ -1,7 +1,7 @@
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { KanbanSquare, Plus } from 'lucide-react';
 import { useState } from 'react';
-import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,13 +15,11 @@ import {
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useCurrentTeam } from '@/hooks/use-current-team';
-import AppLayout from '@/layouts/app-layout';
 import {
 	index as projectsIndex,
 	show as showProject,
 	store as storeProject,
 } from '@/routes/dev/projects';
-import type { BreadcrumbItem } from '@/types';
 
 interface Project {
 	id: number;
@@ -85,18 +83,24 @@ function NewProjectDialog() {
 
 				<form onSubmit={submit} className="space-y-4">
 					<div>
-						<label className="text-sm font-medium">Nombre</label>
+						<label htmlFor="project-create-name" className="text-sm font-medium">
+							Nombre
+						</label>
 						<Input
+							id="project-create-name"
 							value={data.name}
 							onChange={(e) => setData('name', e.target.value)}
 							className="mt-1"
 						/>
-						{errors.name && <p className="mt-1 text-xs text-red-500">{errors.name}</p>}
+						{errors.name && <p className="mt-1 text-xs text-destructive">{errors.name}</p>}
 					</div>
 
 					<div>
-						<label className="text-sm font-medium">Requerimientos iniciales</label>
+						<label htmlFor="project-create-requirements" className="text-sm font-medium">
+							Requerimientos iniciales
+						</label>
 						<Textarea
+							id="project-create-requirements"
 							value={data.requirements}
 							onChange={(e) => setData('requirements', e.target.value)}
 							rows={4}
@@ -105,14 +109,17 @@ function NewProjectDialog() {
 					</div>
 
 					<div>
-						<label className="text-sm font-medium">Fecha estimada de entrega</label>
+						<label htmlFor="project-create-due_date" className="text-sm font-medium">
+							Fecha estimada de entrega
+						</label>
 						<Input
+							id="project-create-due_date"
 							type="date"
 							value={data.due_date}
 							onChange={(e) => setData('due_date', e.target.value)}
 							className="mt-1"
 						/>
-						{errors.due_date && <p className="mt-1 text-xs text-red-500">{errors.due_date}</p>}
+						{errors.due_date && <p className="mt-1 text-xs text-destructive">{errors.due_date}</p>}
 					</div>
 
 					<DialogFooter>
@@ -134,10 +141,13 @@ export default function DevProjectsIndex() {
 		<>
 			<Head title="Proyectos Dev" />
 
-			<div className="flex flex-col gap-4 p-4">
-				<div className="flex items-center justify-between">
+			<div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-6">
+				<div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/10 via-card to-card p-5 md:p-6">
 					<div>
-						<h1 className="text-xl font-semibold">Proyectos Dev</h1>
+						<p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+							Espacio de trabajo
+						</p>
+						<h1 className="text-2xl font-semibold tracking-tight md:text-3xl">Proyectos Dev</h1>
 						<p className="text-sm text-muted-foreground">
 							Gestión de proyectos y tableros Kanban del equipo.
 						</p>
@@ -146,7 +156,7 @@ export default function DevProjectsIndex() {
 				</div>
 
 				{projects.length === 0 ? (
-					<div className="rounded-xl border p-10 text-center">
+					<div className="rounded-2xl border border-dashed bg-card px-6 py-16 text-center">
 						<KanbanSquare className="mx-auto mb-3 text-muted-foreground" size={32} />
 						<p className="text-sm text-muted-foreground">
 							No hay proyectos todavía. Crea el primero para arrancar un tablero.
@@ -163,10 +173,10 @@ export default function DevProjectsIndex() {
 										project: project.id,
 									}).url
 								}
-								className="rounded-xl border bg-card p-4 transition-colors hover:bg-accent"
+								className="group min-w-0 rounded-2xl border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transform-none"
 							>
-								<div className="mb-2 flex items-center justify-between">
-									<h2 className="text-sm font-medium">{project.name}</h2>
+								<div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+									<h2 className="break-words text-base font-semibold">{project.name}</h2>
 									<Badge variant="outline" className={STATUS_CLASS[project.status]}>
 										{STATUS_LABEL[project.status]}
 									</Badge>

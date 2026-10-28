@@ -14,7 +14,7 @@ Branch: refactor/project-foundations. Delivery: integrated single feature branch
 ## Tasks
 - T1 [S1,S2] inline, implemented/verified: branch-first dashboard, 14 focused tests/132 assertions; independent verifier correction preserves missing-team403; commit56c5f64.
 - T2 [S3] inline, implemented/verified: shared theme, branding and application navigation; commit1f18165 (12 paths406 lines), native medium/under_budget.
-- T3 [S2,S3] delegated, implemented/verified: branch listing/detail UX, independent parallel behavior unit with disjoint surfaces.
+- T3 [S2,S3] delegated, implemented/verified: branch listing/detail UX, independent parallel behavior unit with disjoint surfaces; commit5a9a103.
 - T4 [S3] delegated, implemented/verified: project/ticket workspace UX, independent parallel behavior unit with disjoint surfaces.
 - T5 [S3] delegated, implemented/verified: account/auth/team/entry UX, independent parallel behavior unit with disjoint surfaces.
 - T6 [S1-S3] inline plus independent verifier for shared contracts/security, pending: seam checks, scoped review consent and delivery decision.
@@ -43,3 +43,4 @@ Branch: refactor/project-foundations. Delivery: integrated single feature branch
 - L16 2026-10-28 User: "2", selecting the immediately preceding option "Guardar los cambios restantes en commits". This is NOT another review decline; the earlier dashboard decline remains candidate-scoped.
 - L17 Packaging order: shared pagination/table first (branch consumer depends on optional empty-state props), then branches, ticket/project workspaces, account layouts/team settings, and entry page. Split existing account SSR tests by tested behavior so each local work unit is self-contained. Keep all assertions; no new feature work. Visual/browser QA remains explicitly deferred and unrelated original dirty files remain excluded.
 - L18 Packaging check: frontend24 tests172 assertions and TypeScript exit0 after relocating welcome SSR assertions into their own file (same assertions, no product behavior changes; no meaningful new RED). Shared pagination/table unit8aac8db saved with its tests and tracking; native cumulative slice56c5f64..8aac8db medium,645 lines, review_due=false/under_budget. Dashboard decline unchanged; no new review started.
+- L19 Branch operations unit5a9a103 saved (8 paths402 lines including tracking), code/tests together after the shared table dependency. Native cumulative56c5f64..5a9a103 medium,1047 lines, review_due=false/under_budget. Local-only delivery; rollback boundary is its branch UI/test surface. Existing business fields/diagnostic requests unchanged per prior proof.

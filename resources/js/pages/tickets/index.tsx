@@ -1,5 +1,5 @@
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import type { PageProps as InertiaPageProps } from '@inertiajs/core';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { Plus, SendHorizontal, Ticket as TicketIcon } from 'lucide-react';
 import { PaginationGeneric } from '@/components/paginationUI';
 import { Badge } from '@/components/ui/badge';
@@ -102,23 +102,28 @@ export default function TicketsIndex() {
 		<>
 			<Head title="Tickets" />
 
-			<div className="flex flex-col gap-6 p-4">
-				<div className="flex flex-col gap-4 rounded-xl border bg-card p-4 shadow-sm md:flex-row md:items-start md:justify-between">
+			<div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-6">
+				<div className="flex flex-col gap-5 rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/10 via-card to-card p-5 md:flex-row md:items-center md:justify-between md:p-6">
 					<div>
-						<h1 className="text-xl font-semibold">Tickets de soporte</h1>
+						<p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+							Centro de soporte
+						</p>
+						<h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+							Tickets de soporte
+						</h1>
 						<p className="text-sm text-muted-foreground">
 							Crea incidentes, asigna responsables y lleva el seguimiento de cada caso.
 						</p>
 					</div>
 
-					<div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
+					<div className="rounded-xl border bg-background/70 p-4 text-xs text-muted-foreground">
 						<p className="font-medium text-foreground">Flujo rápido</p>
 						<p className="mt-1">Abierto → En proceso → Esperando cliente → Resuelto/Cerrado</p>
 					</div>
 				</div>
 
-				<div className="grid gap-6 xl:grid-cols-[1.3fr_0.7fr]">
-					<div className="rounded-xl border bg-card p-4 shadow-sm">
+				<div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1.3fr)_minmax(0,0.7fr)]">
+					<div className="min-w-0 rounded-2xl border bg-card p-5 shadow-sm md:p-6">
 						<div className="mb-4 flex items-center gap-2">
 							<TicketIcon className="size-4" />
 							<h2 className="font-semibold">Tickets recientes</h2>
@@ -140,7 +145,7 @@ export default function TicketsIndex() {
 													ticket: ticket.id,
 												}).url
 											}
-											className="block rounded-lg border p-4 transition-colors hover:bg-accent"
+											className="group block rounded-xl border border-border/80 p-4 transition hover:border-primary/35 hover:bg-primary/5 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
 										>
 											<div className="flex flex-wrap items-start justify-between gap-3">
 												<div>
@@ -191,27 +196,36 @@ export default function TicketsIndex() {
 						)}
 					</div>
 
-					<div className="rounded-xl border bg-card p-4 shadow-sm">
+					<div className="min-w-0 rounded-2xl border bg-card p-5 shadow-sm md:p-6">
 						<div className="mb-4 flex items-center gap-2">
 							<Plus className="size-4" />
 							<h2 className="font-semibold">Crear ticket</h2>
 						</div>
+						<p className="mb-5 text-sm text-muted-foreground">
+							Registra el incidente y conecta al equipo con la sucursal afectada.
+						</p>
 
 						<form onSubmit={submit} className="space-y-4">
 							<div>
-								<label className="text-sm font-medium">Título</label>
+								<label htmlFor="ticket-create-title" className="text-sm font-medium">
+									Título
+								</label>
 								<Input
+									id="ticket-create-title"
 									value={data.title}
 									onChange={(event) => setData('title', event.target.value)}
 									className="mt-1"
 									placeholder="Ej. Problema con el posteo"
 								/>
-								{errors.title && <p className="mt-1 text-xs text-red-500">{errors.title}</p>}
+								{errors.title && <p className="mt-1 text-xs text-destructive">{errors.title}</p>}
 							</div>
 
 							<div>
-								<label className="text-sm font-medium">Descripción</label>
+								<label htmlFor="ticket-create-description" className="text-sm font-medium">
+									Descripción
+								</label>
 								<Textarea
+									id="ticket-create-description"
 									value={data.description}
 									onChange={(event) => setData('description', event.target.value)}
 									rows={4}
@@ -219,17 +233,20 @@ export default function TicketsIndex() {
 									placeholder="Contexto del problema que dice el error"
 								/>
 								{errors.description && (
-									<p className="mt-1 text-xs text-red-500">{errors.description}</p>
+									<p className="mt-1 text-xs text-destructive">{errors.description}</p>
 								)}
 							</div>
 
 							<div className="grid gap-4 md:grid-cols-2">
 								<div>
-									<label className="text-sm font-medium">Categoría</label>
+									<label htmlFor="ticket-create-category" className="text-sm font-medium">
+										Categoría
+									</label>
 									<select
+										id="ticket-create-category"
 										value={data.category}
 										onChange={(event) => setData('category', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="red">Red</option>
 										<option value="hardware">Hardware</option>
@@ -242,11 +259,14 @@ export default function TicketsIndex() {
 								</div>
 
 								<div>
-									<label className="text-sm font-medium">Prioridad</label>
+									<label htmlFor="ticket-create-priority" className="text-sm font-medium">
+										Prioridad
+									</label>
 									<select
+										id="ticket-create-priority"
 										value={data.priority}
 										onChange={(event) => setData('priority', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="baja">Baja</option>
 										<option value="media">Media</option>
@@ -257,11 +277,14 @@ export default function TicketsIndex() {
 
 							<div className="grid gap-4 md:grid-cols-1">
 								<div>
-									<label className="text-sm font-medium">Sucursal</label>
+									<label htmlFor="ticket-create-store_id" className="text-sm font-medium">
+										Sucursal
+									</label>
 									<select
+										id="ticket-create-store_id"
 										value={data.store_id}
 										onChange={(event) => setData('store_id', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="">Buscar Sucursal</option>
 										{stores.map((store) => (
@@ -275,11 +298,14 @@ export default function TicketsIndex() {
 
 							<div className="grid gap-4 md:grid-cols-2">
 								<div>
-									<label className="text-sm font-medium">Asignar a</label>
+									<label htmlFor="ticket-create-assigned_to" className="text-sm font-medium">
+										Asignar a
+									</label>
 									<select
+										id="ticket-create-assigned_to"
 										value={data.assigned_to}
 										onChange={(event) => setData('assigned_to', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="">Sin asignar</option>
 										{teamMembers.map((member) => (
@@ -291,8 +317,11 @@ export default function TicketsIndex() {
 								</div>
 
 								<div>
-									<label className="text-sm font-medium">Fecha límite</label>
+									<label htmlFor="ticket-create-due_date" className="text-sm font-medium">
+										Fecha límite
+									</label>
 									<Input
+										id="ticket-create-due_date"
 										type="date"
 										value={data.due_date}
 										onChange={(event) => setData('due_date', event.target.value)}

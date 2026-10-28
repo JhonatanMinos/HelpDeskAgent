@@ -1,5 +1,5 @@
-import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import type { PageProps as InertiaPageProps } from '@inertiajs/core';
+import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { ArrowLeft, MessageSquareText, Ticket as TicketIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -147,7 +147,7 @@ export default function TicketShow() {
 		<>
 			<Head title={`Ticket #${ticket.id}`} />
 
-			<div className="flex flex-col gap-6 p-4">
+			<div className="mx-auto flex w-full max-w-7xl flex-col gap-6 p-4 md:p-6">
 				<div className="flex items-center gap-2">
 					<Link
 						href={ticketsIndex(currentTeam.slug).url}
@@ -160,11 +160,15 @@ export default function TicketShow() {
 
 				<div className="grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
 					<div className="space-y-6">
-						<div className="rounded-xl border bg-card p-4 shadow-sm">
+						<div className="min-w-0 rounded-2xl border bg-card p-5 shadow-sm md:p-6">
 							<div className="flex flex-wrap items-start justify-between gap-3">
 								<div>
-									<p className="text-sm text-muted-foreground">#{ticket.id}</p>
-									<h1 className="text-xl font-semibold">{ticket.title}</h1>
+									<p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+										Centro de soporte · #{ticket.id}
+									</p>
+									<h1 className="text-2xl font-semibold tracking-tight md:text-3xl">
+										{ticket.title}
+									</h1>
 								</div>
 								<Badge
 									variant="outline"
@@ -205,21 +209,25 @@ export default function TicketShow() {
 							</div>
 						</div>
 
-						<div className="rounded-xl border bg-card p-4 shadow-sm">
+						<div className="min-w-0 rounded-2xl border bg-card p-5 shadow-sm md:p-6">
 							<div className="mb-4 flex items-center gap-2">
 								<MessageSquareText className="size-4" />
 								<h2 className="font-semibold">Seguimiento</h2>
 							</div>
 
 							<form onSubmit={submitComment} className="space-y-3">
+								<label htmlFor="ticket-comment" className="text-sm font-medium">
+									Nuevo seguimiento
+								</label>
 								<Textarea
+									id="ticket-comment"
 									value={commentForm.data.body}
 									onChange={(event) => commentForm.setData('body', event.target.value)}
 									rows={4}
 									placeholder="Escribe una actualización o respuesta para el cliente..."
 								/>
 								{commentForm.errors.body && (
-									<p className="text-xs text-red-500">{commentForm.errors.body}</p>
+									<p className="text-xs text-destructive">{commentForm.errors.body}</p>
 								)}
 								<Button type="submit" disabled={commentForm.processing}>
 									Agregar seguimiento
@@ -247,7 +255,7 @@ export default function TicketShow() {
 							</div>
 						</div>
 
-						<div className="rounded-xl border bg-card p-4 shadow-sm">
+						<div className="min-w-0 rounded-2xl border bg-card p-5 shadow-sm md:p-6">
 							<div className="mb-4 flex items-center gap-2">
 								<TicketIcon className="size-4" />
 								<h2 className="font-semibold">Historial de actividad</h2>
@@ -293,7 +301,7 @@ export default function TicketShow() {
 						</div>
 					</div>
 
-					<div className="rounded-xl border bg-card p-4 shadow-sm">
+					<div className="min-w-0 rounded-2xl border bg-card p-5 shadow-sm md:p-6">
 						<div className="mb-4 flex items-center gap-2">
 							<TicketIcon className="size-4" />
 							<h2 className="font-semibold">Actualizar ticket</h2>
@@ -301,18 +309,24 @@ export default function TicketShow() {
 
 						<form onSubmit={submitUpdate} className="space-y-4">
 							<div>
-								<label className="text-sm font-medium">Título</label>
+								<label htmlFor="ticket-update-title" className="text-sm font-medium">
+									Título
+								</label>
 								<Input
+									id="ticket-update-title"
 									value={data.title}
 									onChange={(event) => setData('title', event.target.value)}
 									className="mt-1"
 								/>
-								{errors.title && <p className="mt-1 text-xs text-red-500">{errors.title}</p>}
+								{errors.title && <p className="mt-1 text-xs text-destructive">{errors.title}</p>}
 							</div>
 
 							<div>
-								<label className="text-sm font-medium">Descripción</label>
+								<label htmlFor="ticket-update-description" className="text-sm font-medium">
+									Descripción
+								</label>
 								<Textarea
+									id="ticket-update-description"
 									value={data.description}
 									onChange={(event) => setData('description', event.target.value)}
 									rows={4}
@@ -322,11 +336,14 @@ export default function TicketShow() {
 
 							<div className="grid gap-4 md:grid-cols-2">
 								<div>
-									<label className="text-sm font-medium">Estado</label>
+									<label htmlFor="ticket-update-status" className="text-sm font-medium">
+										Estado
+									</label>
 									<select
+										id="ticket-update-status"
 										value={data.status}
 										onChange={(event) => setData('status', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="abierto">Abierto</option>
 										<option value="en_proceso">En proceso</option>
@@ -337,11 +354,14 @@ export default function TicketShow() {
 								</div>
 
 								<div>
-									<label className="text-sm font-medium">Prioridad</label>
+									<label htmlFor="ticket-update-priority" className="text-sm font-medium">
+										Prioridad
+									</label>
 									<select
+										id="ticket-update-priority"
 										value={data.priority}
 										onChange={(event) => setData('priority', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="baja">Baja</option>
 										<option value="media">Media</option>
@@ -351,11 +371,14 @@ export default function TicketShow() {
 							</div>
 
 							<div>
-								<label className="text-sm font-medium">Categoría</label>
+								<label htmlFor="ticket-update-category" className="text-sm font-medium">
+									Categoría
+								</label>
 								<select
+									id="ticket-update-category"
 									value={data.category}
 									onChange={(event) => setData('category', event.target.value)}
-									className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+									className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 								>
 									<option value="red">Red</option>
 									<option value="hardware">Hardware</option>
@@ -369,11 +392,14 @@ export default function TicketShow() {
 
 							<div className="grid gap-4 md:grid-cols-2">
 								<div>
-									<label className="text-sm font-medium">Sucursal</label>
+									<label htmlFor="ticket-update-store_id" className="text-sm font-medium">
+										Sucursal
+									</label>
 									<select
+										id="ticket-update-store_id"
 										value={data.store_id}
 										onChange={(event) => setData('store_id', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="">Sin sucursal</option>
 										{stores.map((store) => (
@@ -385,11 +411,14 @@ export default function TicketShow() {
 								</div>
 
 								<div>
-									<label className="text-sm font-medium">Proyecto</label>
+									<label htmlFor="ticket-update-project_id" className="text-sm font-medium">
+										Proyecto
+									</label>
 									<select
+										id="ticket-update-project_id"
 										value={data.project_id}
 										onChange={(event) => setData('project_id', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="">Sin proyecto</option>
 										{projects.map((project) => (
@@ -403,11 +432,14 @@ export default function TicketShow() {
 
 							<div className="grid gap-4 md:grid-cols-2">
 								<div>
-									<label className="text-sm font-medium">Asignar a</label>
+									<label htmlFor="ticket-update-assigned_to" className="text-sm font-medium">
+										Asignar a
+									</label>
 									<select
+										id="ticket-update-assigned_to"
 										value={data.assigned_to}
 										onChange={(event) => setData('assigned_to', event.target.value)}
-										className="mt-1 w-full rounded-md border bg-background px-3 py-2 text-sm"
+										className="mt-1 min-h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm outline-none transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30"
 									>
 										<option value="">Sin asignar</option>
 										{teamMembers.map((member) => (
@@ -419,8 +451,11 @@ export default function TicketShow() {
 								</div>
 
 								<div>
-									<label className="text-sm font-medium">Fecha límite</label>
+									<label htmlFor="ticket-update-due_date" className="text-sm font-medium">
+										Fecha límite
+									</label>
 									<Input
+										id="ticket-update-due_date"
 										type="date"
 										value={data.due_date}
 										onChange={(event) => setData('due_date', event.target.value)}

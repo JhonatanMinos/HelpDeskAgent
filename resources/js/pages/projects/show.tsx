@@ -1,6 +1,6 @@
+import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
-import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { NewTaskDialog } from '@/components/dev/new-task-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardAction, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
@@ -91,22 +91,40 @@ export default function KanbanBoard() {
 		<>
 			<Head title={project.name} />
 
-			<div className="p-4">
-				<h1 className="mb-6 text-xl font-semibold tracking-tight">{project.name}</h1>
+			<div className="flex min-w-0 flex-col gap-6 p-4 md:p-6">
+				<header className="rounded-2xl border border-primary/15 bg-gradient-to-br from-primary/10 via-card to-card p-5 md:p-6">
+					<p className="mb-2 text-xs font-semibold uppercase tracking-widest text-primary">
+						Tablero del equipo
+					</p>
+					<h1 className="break-words text-2xl font-semibold tracking-tight md:text-3xl">
+						{project.name}
+					</h1>
+					<p className="mt-2 text-sm text-muted-foreground">
+						Organiza las tareas por etapa y arrástralas para actualizar su avance.
+					</p>
+				</header>
 
 				<div className="flex gap-4 overflow-x-auto pb-4">
 					{board.map((column) => (
-						<div
+						<fieldset
 							key={column.id}
+							aria-label={`Etapa ${column.name}`}
 							onDragOver={(e) => e.preventDefault()}
 							onDrop={() => handleDrop(column.id)}
-							className="w-72 shrink-0 rounded-lg border bg-muted/30 p-3"
+							className="w-72 shrink-0 rounded-2xl border bg-muted/40 p-3 md:w-80"
 						>
 							<div className="mb-3 flex items-center justify-between">
 								<h2 className="text-sm font-medium">{column.name}</h2>
-								<span className="text-xs text-muted-foreground">{column.tasks.length}</span>
+								<span className="grid min-w-6 place-items-center rounded-full bg-background px-1.5 py-0.5 text-xs font-medium text-muted-foreground">
+									{column.tasks.length}
+								</span>
 							</div>
 							<div className="space-y-2">
+								{column.tasks.length === 0 && (
+									<p className="rounded-xl border border-dashed px-3 py-8 text-center text-xs text-muted-foreground">
+										Sin tareas en esta columna
+									</p>
+								)}
 								{column.tasks.map((task) => (
 									<Card
 										key={task.id}
@@ -117,7 +135,7 @@ export default function KanbanBoard() {
 												fromColumn: column.id,
 											})
 										}
-										className="cursor-grabbing bg-card p-3 shadow-lg active:cursor-grabbing"
+										className="cursor-grab gap-3 rounded-xl bg-card p-3 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing"
 									>
 										<CardHeader>
 											<CardDescription>#{task.id}</CardDescription>
@@ -138,7 +156,7 @@ export default function KanbanBoard() {
 								projectId={project.id}
 								columnId={column.id}
 							/>
-						</div>
+						</fieldset>
 					))}
 				</div>
 			</div>

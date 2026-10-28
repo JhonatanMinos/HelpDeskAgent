@@ -1,6 +1,6 @@
 import { useForm } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
 	Dialog,
@@ -35,6 +35,7 @@ interface Props {
 
 export function NewTaskDialog({ currentTeamSlug, projectId, columnId, members = [] }: Props) {
 	const [open, setOpen] = useState(false);
+	const formId = useId();
 
 	const { data, setData, post, processing, errors, reset } = useForm({
 		boards_column_id: columnId,
@@ -62,20 +63,26 @@ export function NewTaskDialog({ currentTeamSlug, projectId, columnId, members = 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
-				<button className="mt-3 flex w-full items-center justify-center gap-1 rounded-md border border-dashed py-2 text-xs text-muted-foreground hover:bg-accent">
+				<button
+					type="button"
+					className="mt-3 flex min-h-10 w-full items-center justify-center gap-1.5 rounded-xl border border-dashed px-3 py-2 text-xs font-medium text-muted-foreground transition hover:border-primary/40 hover:bg-primary/5 hover:text-primary focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+				>
 					<Plus size={14} /> Nueva tarea
 				</button>
 			</DialogTrigger>
 
-			<DialogContent>
+			<DialogContent className="max-h-[85dvh] overflow-y-auto rounded-2xl sm:max-w-lg">
 				<DialogHeader>
 					<DialogTitle>Nueva tarea</DialogTitle>
 				</DialogHeader>
 
 				<form onSubmit={submit} className="space-y-4">
 					<div>
-						<label className="text-sm font-medium">Título</label>
+						<label htmlFor={`${formId}-title`} className="text-sm font-medium">
+							Título
+						</label>
 						<Input
+							id={`${formId}-title`}
 							value={data.title}
 							onChange={(e) => setData('title', e.target.value)}
 							className="mt-1"
@@ -85,8 +92,11 @@ export function NewTaskDialog({ currentTeamSlug, projectId, columnId, members = 
 					</div>
 
 					<div>
-						<label className="text-sm font-medium">Descripción</label>
+						<label htmlFor={`${formId}-description`} className="text-sm font-medium">
+							Descripción
+						</label>
 						<Textarea
+							id={`${formId}-description`}
 							value={data.description}
 							onChange={(e) => setData('description', e.target.value)}
 							rows={3}
@@ -94,14 +104,16 @@ export function NewTaskDialog({ currentTeamSlug, projectId, columnId, members = 
 						/>
 					</div>
 
-					<div className="grid grid-cols-2 gap-3">
+					<div className="grid gap-3 sm:grid-cols-2">
 						<div>
-							<label className="text-sm font-medium">Prioridad</label>
+							<label htmlFor={`${formId}-priority`} className="text-sm font-medium">
+								Prioridad
+							</label>
 							<Select
 								value={data.priority}
 								onValueChange={(v) => setData('priority', v as typeof data.priority)}
 							>
-								<SelectTrigger className="mt-1">
+								<SelectTrigger id={`${formId}-priority`} className="mt-1 w-full">
 									<SelectValue />
 								</SelectTrigger>
 								<SelectContent>
@@ -113,8 +125,11 @@ export function NewTaskDialog({ currentTeamSlug, projectId, columnId, members = 
 						</div>
 
 						<div>
-							<label className="text-sm font-medium">Fecha límite</label>
+							<label htmlFor={`${formId}-due_date`} className="text-sm font-medium">
+								Fecha límite
+							</label>
 							<Input
+								id={`${formId}-due_date`}
 								type="date"
 								value={data.due_date}
 								onChange={(e) => setData('due_date', e.target.value)}
@@ -126,12 +141,14 @@ export function NewTaskDialog({ currentTeamSlug, projectId, columnId, members = 
 
 					{members.length > 0 && (
 						<div>
-							<label className="text-sm font-medium">Asignar a</label>
+							<label htmlFor={`${formId}-assigned_to`} className="text-sm font-medium">
+								Asignar a
+							</label>
 							<Select
 								value={String(data.assigned_to)}
 								onValueChange={(v) => setData('assigned_to', v === 'unassigned' ? '' : Number(v))}
 							>
-								<SelectTrigger className="mt-1">
+								<SelectTrigger id={`${formId}-assigned_to`} className="mt-1 w-full">
 									<SelectValue placeholder="Sin asignar" />
 								</SelectTrigger>
 								<SelectContent>
