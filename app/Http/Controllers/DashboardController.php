@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Team;
 use App\Models\TeamInvitation;
+use App\Services\DashboardService;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -10,12 +12,14 @@ use Inertia\Response;
 /**
  * \App\Http\Controllers\DashboardController
  *
- * @description Construye la respuesta Inertia del panel y presenta invitaciones pendientes dirigidas al correo del usuario.
+ * @description Presenta el resumen operativo del equipo y las invitaciones pendientes dirigidas al correo del usuario.
  */
 class DashboardController extends Controller
 {
-    public function __invoke(Request $request): Response
+    public function __invoke(Request $request, DashboardService $dashboard): Response
     {
+        $team = $request->user()->currentTeam;
+        abort_unless($team instanceof Team, 403);
         $email = strtolower($request->user()->email);
 
         $pendingInvitations = TeamInvitation::query()
@@ -37,6 +41,7 @@ class DashboardController extends Controller
             ]);
 
         return Inertia::render('dashboard', [
+            'overview' => $dashboard->overview($team),
             'pendingInvitations' => $pendingInvitations,
         ]);
     }
