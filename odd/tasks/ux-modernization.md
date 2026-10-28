@@ -9,15 +9,19 @@ Branch: refactor/project-foundations. Delivery: integrated single feature branch
 
 - S4: "continua puliendo la UX/UI" — continue bounded polish of empty/loading/navigation/accessibility states without changing existing backend workflows.
 
+- S5: "2" — user selected "Guardar los cambios restantes en commits" from the immediately preceding answer. Save only the verified UX/UI work on the existing branch; no publication.
+
 ## Tasks
-- T1 [S1,S2] inline, implemented/verified: branch-first dashboard, 14 focused tests/132 assertions; independent verifier correction preserves missing-team403; no commit yet.
-- T2 [S3] inline, implemented/verified: shared theme, branding and application navigation; root owns shared surfaces.
+- T1 [S1,S2] inline, implemented/verified: branch-first dashboard, 14 focused tests/132 assertions; independent verifier correction preserves missing-team403; commit56c5f64.
+- T2 [S3] inline, implemented/verified: shared theme, branding and application navigation; commit1f18165 (12 paths406 lines), native medium/under_budget.
 - T3 [S2,S3] delegated, implemented/verified: branch listing/detail UX, independent parallel behavior unit with disjoint surfaces.
 - T4 [S3] delegated, implemented/verified: project/ticket workspace UX, independent parallel behavior unit with disjoint surfaces.
 - T5 [S3] delegated, implemented/verified: account/auth/team/entry UX, independent parallel behavior unit with disjoint surfaces.
 - T6 [S1-S3] inline plus independent verifier for shared contracts/security, pending: seam checks, scoped review consent and delivery decision.
 
 - T7 [S4] inline, implemented/verified: honest shared pagination, empty-table feedback, keyboard skip navigation and error contrast.
+
+- T8 [S5] inline, in progress: package shared pagination, branches, workspaces, accounts and entry page with their matching tests; no application behavior changes.
 
 ## Log
 - L1 Original user request: "vamos con el dashboard". Assistant proposal: "¿Lo enfocamos en un resumen operativo del equipo: tickets por estado, sucursales online/offline y actividad reciente?" User: "si que lo llamativo es las sucursales".
@@ -33,3 +37,8 @@ Branch: refactor/project-foundations. Delivery: integrated single feature branch
 - L10 T7 RED4 -> GREEN4/17; final24 frontend/172,190 backend/801, tsc0, build0. Scoped independent S4 passes9/37 and8 actual-page SSR differential renders: pagination href/query params unchanged for branch/ticket populated/empty fixtures; disabled controls cannot navigate or submit; table fields preserved; skip target unique; destructive alert tokens visible. Browser focus and measured contrast not tested.
 - L11 Parent removed unnecessary dashboard test Inertia mock after nonfatal DOM warning; final frontend24/172 has no mock warning. Shared error text must use destructive token (not white button text); destructive buttons use their own white text. Previous native preflight was never started; final candidate must be assessed per committed work-unit boundary.
 - L12 Existing delivery decision verified in full memory202 and project-refactor.md L7: “todo en un rama”. Reuse refactor/project-foundations; PR slicing stays deferred, no oversized-PR consent implied. Dashboard is one cohesive local work unit above400 lines because data payload, primary UI and regressions belong together; do not omit tests or compress styling to hit an advisory count.
+- L13 Dashboard unit committed56c5f64 (8 paths631 changed lines), remaining UI/polish safely retained uncommitted on the same branch. Native committed-only assessment high via item2; initial inventory omission corrected with canonical explicit exclude digest. Exact START returned consent/v3 (native medium,8 paths631 lines), targetbece9bf7eaf7f1f3367e95e359d83586e4af268bffb28b1e29e91b0b9ab6e425, lineagereview-b9d2f6034c3263c0. Await granted/declined for this dashboard commit only; no review verdict or consent exists yet. Remaining unit commits continue after this blocking choice. Preserve exact provider invocations saved in session handoff.
+- L14 User answered “2”: exact provider-owned dashboard decline executed once, confirmed action=declined and consent=declined_this_candidate for targetbece9bf7eaf7f1f3367e95e359d83586e4af268bffb28b1e29e91b0b9ab6e425. No review record/approval; future review mode remains enabled. This supersedes L13 awaiting consent.
+- L15 Continued local authorized delivery: shell/theme/navigation saved in1f18165, 12 paths406 lines. Native committed-only assessment against56c5f64: medium, review_due=false, reasonunder_budget; no START/review requested. Untracked inventory changed after commit, refreshed canonically and excluded; final digest7464034752c8e8fa550b0f1bdd17669aa9a12b83d4ea80e1911866e4373cd1c3. Remaining branch/workspace/account/pagination-polish changes are implemented/verified but not committed; preserve their worktree state and unrelated baseline changes. No push/PR/merge or extra branches.
+- L16 2026-10-28 User: "2", selecting the immediately preceding option "Guardar los cambios restantes en commits". This is NOT another review decline; the earlier dashboard decline remains candidate-scoped.
+- L17 Packaging order: shared pagination/table first (branch consumer depends on optional empty-state props), then branches, ticket/project workspaces, account layouts/team settings, and entry page. Split existing account SSR tests by tested behavior so each local work unit is self-contained. Keep all assertions; no new feature work. Visual/browser QA remains explicitly deferred and unrelated original dirty files remain excluded.
