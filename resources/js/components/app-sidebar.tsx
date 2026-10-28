@@ -1,7 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BookOpen, Bug, FolderGit2, FolderKanban, GitBranch, LayoutGrid } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
-import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
 import { TeamSwitcher } from '@/components/team-switcher';
@@ -14,61 +12,19 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { workspaceNavigation } from '@/lib/workspace-navigation';
 import { dashboard } from '@/routes';
-import { index as branches } from '@/routes/branches';
-import { index as projects } from '@/routes/dev/projects';
-import { index as tickets } from '@/routes/tickets';
-import type { NavItem } from '@/types';
 
 export function AppSidebar() {
 	const page = usePage();
 	const currentTeam = page.props.currentTeam;
 
-	// Si no hay team activo, no tiene sentido armar rutas que requieren slug.
 	const dashboardUrl = currentTeam ? dashboard.url(currentTeam.slug) : '/';
-	const branchesUrl = currentTeam ? branches.url(currentTeam.slug) : '/';
-	const projectsUrl = currentTeam ? projects.url(currentTeam.slug) : '/';
-	const ticketsUrl = currentTeam ? tickets.url(currentTeam.slug) : '/';
-
-	const mainNavItems: NavItem[] = [
-		{
-			title: 'Dashboard',
-			href: dashboardUrl,
-			icon: LayoutGrid,
-		},
-		{
-			title: 'Branches',
-			href: branchesUrl,
-			icon: GitBranch,
-		},
-		{
-			title: 'Projects',
-			href: projectsUrl,
-			icon: FolderKanban,
-		},
-		{
-			title: 'Tickets',
-			href: ticketsUrl,
-			icon: Bug,
-		},
-	];
-
-	const footerNavItems: NavItem[] = [
-		{
-			title: 'Repository',
-			href: 'https://github.com/laravel/react-starter-kit',
-			icon: FolderGit2,
-		},
-		{
-			title: 'Documentation',
-			href: 'https://laravel.com/docs/starter-kits#react',
-			icon: BookOpen,
-		},
-	];
+	const mainNavItems = workspaceNavigation(currentTeam?.slug ?? null);
 
 	return (
 		<Sidebar collapsible="icon" variant="floating">
-			<SidebarHeader>
+			<SidebarHeader className="gap-5 p-3">
 				<SidebarMenu>
 					<SidebarMenuItem>
 						<SidebarMenuButton size="lg" asChild>
@@ -89,8 +45,7 @@ export function AppSidebar() {
 				<NavMain items={mainNavItems} />
 			</SidebarContent>
 
-			<SidebarFooter>
-				<NavFooter items={footerNavItems} className="mt-auto" />
+			<SidebarFooter className="border-t border-sidebar-border p-3">
 				<NavUser />
 			</SidebarFooter>
 		</Sidebar>
