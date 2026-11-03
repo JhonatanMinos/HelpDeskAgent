@@ -129,8 +129,8 @@ test('public bound ticket routes preserve relation validation and persistence', 
     $this->actingAs($outsider);
     foreach (['create', 'update'] as $operation) {
         $before = ticketValidationDatabaseState();
-        $response = $operation === 'create' ? $this->postJson($storeUrl, $base) : $this->patchJson($updateUrl,$base);
+        $response = $operation === 'create' ? $this->postJson($storeUrl, $base) : $this->patchJson($updateUrl, $base);
         $response->assertForbidden();
-        $this->assertSame($before,ticketValidationDatabaseState());
+        $this->assertSame($before, ticketValidationDatabaseState());
     }
 });

@@ -8,36 +8,36 @@ import { useEffect, useRef, useState } from 'react';
  * de teclear, preservando el estado de la página actual.
  */
 export function useDebouncedSearch(
-    routeUrl: string,
-    initialValue: string,
-    only: string[],
-    delayMs = 350,
+	routeUrl: string,
+	initialValue: string,
+	only: string[],
+	delayMs = 350
 ) {
-    const [search, setSearch] = useState(initialValue);
-    const isFirstRender = useRef(true);
+	const [search, setSearch] = useState(initialValue);
+	const isFirstRender = useRef(true);
 
-    useEffect(() => {
-        if (isFirstRender.current) {
-            isFirstRender.current = false;
-            return;
-        }
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			return;
+		}
 
-        const timeout = setTimeout(() => {
-            router.get(
-                routeUrl,
-                { search: search || undefined },
-                {
-                    preserveState: true,
-                    preserveScroll: true,
-                    replace: true,
-                    only,
-                },
-            );
-        }, delayMs);
+		const timeout = setTimeout(() => {
+			router.get(
+				routeUrl,
+				{ search: search || undefined },
+				{
+					preserveState: true,
+					preserveScroll: true,
+					replace: true,
+					only,
+				}
+			);
+		}, delayMs);
 
-        return () => clearTimeout(timeout);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [search]);
+		return () => clearTimeout(timeout);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [search]);
 
-    return [search, setSearch] as const;
+	return [search, setSearch] as const;
 }

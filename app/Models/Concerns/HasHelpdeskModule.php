@@ -32,7 +32,7 @@ trait HasHelpdeskModule
     public function disableModule(HelpdeskModule $module): void
     {
         $modules = collect($this->enabled_modules ?? [])
-            ->reject(fn($m) => $m === $module->value)
+            ->reject(fn ($m) => $m === $module->value)
             ->values()
             ->all();
 
@@ -42,7 +42,7 @@ trait HasHelpdeskModule
     public function activeModules(): array
     {
         return collect($this->enabled_modules ?? [])
-            ->map(fn($value) => HelpdeskModule::from($value))
+            ->map(fn ($value) => HelpdeskModule::from($value))
             ->all();
     }
 }

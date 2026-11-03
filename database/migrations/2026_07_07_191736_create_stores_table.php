@@ -17,13 +17,13 @@ return new class extends Migration
             $table->string('name');
             $table->enum('company', [16, 24]); // Segmento de empresa
             $table->string('base_ip'); // IP base como string para calculo dinamico
-            //Informacion de Tienda
+            // Informacion de Tienda
             $table->string('address');           // direccion
             $table->string('neighborhood');      // colonia
             $table->string('city');              // municipio
             $table->string('postal_code', 10);   // codigo_postal
             $table->string('state');
-            //Pintar en Map
+            // Pintar en Map
             $table->decimal('lat', 10, 7)->nullable();
             $table->decimal('lng', 10, 7)->nullable();
 

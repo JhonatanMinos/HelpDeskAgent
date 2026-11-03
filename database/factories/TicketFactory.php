@@ -3,8 +3,8 @@
 namespace Database\Factories;
 
 use App\Enums\TeamRole;
-use App\Models\Ticket;
 use App\Models\Team;
+use App\Models\Ticket;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

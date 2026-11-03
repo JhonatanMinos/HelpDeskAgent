@@ -34,6 +34,6 @@ enum StoreDevice: string
 
     public static function fromOctet(int $octet): ?self
     {
-        return collect(self::cases())->first(fn(self $d) => $d->octet() === $octet);
+        return collect(self::cases())->first(fn (self $d) => $d->octet() === $octet);
     }
 }

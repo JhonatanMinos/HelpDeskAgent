@@ -4,7 +4,7 @@ namespace App\Enums;
 
 enum HelpdeskModule: string
 {
-    case Infraestructura = 'Infraestructura'; //tiendas, impresoras, server, ping
+    case Infraestructura = 'Infraestructura'; // tiendas, impresoras, server, ping
     case Dev = 'dev';
 
     public function label(): string
