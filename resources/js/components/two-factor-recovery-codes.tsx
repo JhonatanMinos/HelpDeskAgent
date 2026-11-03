@@ -12,6 +12,8 @@ type Props = {
 	errors: string[];
 };
 
+const loadingSlots = ['first', 'second', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth'];
+
 export default function TwoFactorRecoveryCodes({
 	recoveryCodesList,
 	fetchRecoveryCodes,
@@ -113,9 +115,9 @@ export default function TwoFactorRecoveryCodes({
 										))
 									) : (
 										<div className="space-y-2" aria-label="Loading recovery codes">
-											{Array.from({ length: 8 }, (_, index) => (
+											{loadingSlots.map((slot) => (
 												<div
-													key={index}
+													key={slot}
 													className="h-4 animate-pulse rounded bg-muted-foreground/20"
 													aria-hidden="true"
 												/>

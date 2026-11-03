@@ -19,18 +19,21 @@ import { useClipboard } from '@/hooks/use-clipboard';
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
 import { confirm } from '@/routes/two-factor';
 
+const gridSlots = ['first', 'second', 'third', 'fourth', 'fifth'];
+const otpSlots = Array.from({ length: OTP_MAX_LENGTH }, (_, position) => `otp-slot-${position}`);
+
 function GridScanIcon() {
 	return (
 		<div className="mb-3 rounded-full border border-border bg-card p-0.5 shadow-sm">
 			<div className="relative overflow-hidden rounded-full border border-border bg-muted p-2.5">
 				<div className="absolute inset-0 grid grid-cols-5 opacity-50">
-					{Array.from({ length: 5 }, (_, i) => (
-						<div key={`col-${i + 1}`} className="border-r border-border last:border-r-0" />
+					{gridSlots.map((slot) => (
+						<div key={slot} className="border-r border-border last:border-r-0" />
 					))}
 				</div>
 				<div className="absolute inset-0 grid grid-rows-5 opacity-50">
-					{Array.from({ length: 5 }, (_, i) => (
-						<div key={`row-${i + 1}`} className="border-b border-border last:border-b-0" />
+					{gridSlots.map((slot) => (
+						<div key={slot} className="border-b border-border last:border-b-0" />
 					))}
 				</div>
 				<ScanLine className="relative z-20 size-6 text-foreground" />
@@ -162,8 +165,8 @@ function TwoFactorVerificationStep({
 								autoFocus
 							>
 								<InputOTPGroup>
-									{Array.from({ length: OTP_MAX_LENGTH }, (_, index) => (
-										<InputOTPSlot key={index} index={index} />
+									{otpSlots.map((slot, index) => (
+										<InputOTPSlot key={slot} index={index} />
 									))}
 								</InputOTPGroup>
 							</InputOTP>

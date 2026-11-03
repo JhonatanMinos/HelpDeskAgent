@@ -8,6 +8,8 @@ import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp
 import { OTP_MAX_LENGTH } from '@/hooks/use-two-factor-auth';
 import { store } from '@/routes/two-factor/login';
 
+const otpSlots = Array.from({ length: OTP_MAX_LENGTH }, (_, position) => `otp-slot-${position}`);
+
 export default function TwoFactorChallenge() {
 	const [showRecoveryInput, setShowRecoveryInput] = useState<boolean>(false);
 	const [code, setCode] = useState<string>('');
@@ -81,8 +83,8 @@ export default function TwoFactorChallenge() {
 											autoFocus
 										>
 											<InputOTPGroup>
-												{Array.from({ length: OTP_MAX_LENGTH }, (_, index) => (
-													<InputOTPSlot key={index} index={index} />
+												{otpSlots.map((slot, index) => (
+													<InputOTPSlot key={slot} index={index} />
 												))}
 											</InputOTPGroup>
 										</InputOTP>
