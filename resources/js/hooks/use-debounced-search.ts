@@ -15,6 +15,11 @@ export function useDebouncedSearch(
 ) {
 	const [search, setSearch] = useState(initialValue);
 	const isFirstRender = useRef(true);
+	const onlyRef = useRef(only);
+
+	useEffect(() => {
+		onlyRef.current = only;
+	}, [only]);
 
 	useEffect(() => {
 		if (isFirstRender.current) {
@@ -30,14 +35,13 @@ export function useDebouncedSearch(
 					preserveState: true,
 					preserveScroll: true,
 					replace: true,
-					only,
+					only: onlyRef.current,
 				}
 			);
 		}, delayMs);
 
 		return () => clearTimeout(timeout);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [search]);
+	}, [search, routeUrl, delayMs]);
 
 	return [search, setSearch] as const;
 }
