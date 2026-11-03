@@ -2,10 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Enums\TeamRole;
 use App\Models\Team;
 use App\Models\Ticket;
 use App\Models\User;
-use App\Enums\TeamRole;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -110,6 +110,6 @@ class TicketRoutesTest extends TestCase
         $response = $this->delete(route('tickets.destroy', ['current_team' => $team->slug, 'ticket' => $ticket->id]));
 
         $response->assertStatus(302);
-        $this->assertDatabaseMissing('tickets', ['id' => $ticket->id]);
+        $this->assertSoftDeleted('tickets', ['id' => $ticket->id]);
     }
 }

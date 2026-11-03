@@ -4,6 +4,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\KanbanController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\Teams\TeamInvitationController;
 use App\Http\Controllers\TicketCommentController;
 use App\Http\Controllers\TicketController;
@@ -30,12 +31,18 @@ Route::prefix('{current_team}')
                 Route::get('/', [ProjectController::class, 'index'])->name('index');
                 Route::post('/', [ProjectController::class, 'store'])->name('store');
                 Route::get('{project}', [ProjectController::class, 'show'])->name('show');
+                Route::patch('{project}', [ProjectController::class, 'update'])->name('update');
+                Route::delete('{project}', [ProjectController::class, 'destroy'])->name('destroy');
                 Route::patch('{project}/status', [ProjectController::class, 'updateStatus'])->name('update-status');
             });
 
             Route::post('projects/{project}/tasks', [KanbanController::class, 'storeTask'])->name('tasks.store');
             Route::post('projects/{project}/columns', [KanbanController::class, 'storeColumn'])->name('columns.store');
             Route::patch('tasks/{task}/move', [KanbanController::class, 'moveTask'])->name('tasks.move');
+            Route::patch('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');
+            Route::delete('tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+            Route::patch('tasks/{task}/archive', [TaskController::class, 'archive'])->name('tasks.archive');
+            Route::patch('tasks/{task}/restore', [TaskController::class, 'restore'])->name('tasks.restore');
         });
 
         Route::resource('tickets', TicketController::class)->names('tickets');

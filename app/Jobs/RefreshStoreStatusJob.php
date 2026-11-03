@@ -5,12 +5,13 @@ namespace App\Jobs;
 use App\Models\Store;
 use App\Services\NetworkDiagnosticService;
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class RefreshStoreStatusJob implements ShouldQueue
+class RefreshStoreStatusJob implements ShouldBeUnique, ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -27,9 +28,10 @@ class RefreshStoreStatusJob implements ShouldQueue
     {
         //
     }
+
     public function uniqueId(): string
     {
-        return 'store-status-' . $this->store->id;
+        return 'store-status-'.$this->store->id;
     }
 
     public function handle(NetworkDiagnosticService $diagnostics): void

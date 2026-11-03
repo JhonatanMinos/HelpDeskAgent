@@ -2,18 +2,14 @@ import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, router, usePage } from '@inertiajs/react';
 import { useEffect, useState } from 'react';
 import { NewTaskDialog } from '@/components/dev/new-task-dialog';
+import { type EditableTask, TaskActions, type TaskMember } from '@/components/dev/task-actions';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardAction, CardDescription, CardFooter, CardHeader } from '@/components/ui/card';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { index as projectsIndex, show as showProject } from '@/routes/dev/projects';
 import { move as moveTask } from '@/routes/dev/tasks';
 
-interface Task {
-	id: number;
-	title: string;
-	priority: 'baja' | 'media' | 'alta';
-	assignee: { name: string } | null;
-}
+type Task = EditableTask;
 
 interface Column {
 	id: number;
@@ -31,6 +27,9 @@ interface Project {
 interface PageProps extends InertiaPageProps {
 	project: Project;
 	columns: Column[];
+	archivedTasks?: Task[];
+	members?: TaskMember[];
+	taskArchivingAvailable?: boolean;
 }
 
 const PRIORITY_COLOR: Record<Task['priority'], string> = {
@@ -41,9 +40,16 @@ const PRIORITY_COLOR: Record<Task['priority'], string> = {
 
 export default function KanbanBoard() {
 	const currentTeam = useCurrentTeam();
-	const { project, columns } = usePage<PageProps>().props;
+	const {
+		project,
+		columns,
+		archivedTasks = [],
+		members = [],
+		taskArchivingAvailable = true,
+	} = usePage<PageProps>().props;
 
 	const [board, setBoard] = useState<Column[]>(columns);
+	const [moving, setMoving] = useState(false);
 	const [dragged, setDragged] = useState<{
 		taskId: number;
 		fromColumn: number;
@@ -54,7 +60,12 @@ export default function KanbanBoard() {
 	}, [columns]);
 
 	const handleDrop = (toColumnId: number) => {
-		if (!dragged) return;
+		if (!dragged || moving) return;
+		if (dragged.fromColumn === toColumnId) {
+			setDragged(null);
+			return;
+		}
+		const previousBoard = board;
 
 		const next = board.map((col) => {
 			if (col.id === dragged.fromColumn) {
@@ -73,6 +84,7 @@ export default function KanbanBoard() {
 		});
 
 		setBoard(next);
+		setMoving(true);
 		setDragged(null);
 
 		const targetColumn = next.find((c) => c.id === toColumnId)!;
@@ -83,7 +95,13 @@ export default function KanbanBoard() {
 				boards_column_id: toColumnId,
 				ordered_task_ids: targetColumn.tasks.map((t) => t.id),
 			},
-			{ preserveScroll: true, preserveState: true }
+			{
+				preserveScroll: true,
+				preserveState: true,
+				onError: () => setBoard(previousBoard),
+				onCancel: () => setBoard(previousBoard),
+				onFinish: () => setMoving(false),
+			}
 		);
 	};
 
@@ -128,7 +146,7 @@ export default function KanbanBoard() {
 								{column.tasks.map((task) => (
 									<Card
 										key={task.id}
-										draggable
+										draggable={!moving}
 										onDragStart={() =>
 											setDragged({
 												taskId: task.id,
@@ -139,14 +157,23 @@ export default function KanbanBoard() {
 									>
 										<CardHeader>
 											<CardDescription>#{task.id}</CardDescription>
-											<CardAction>
+											<CardAction className="flex items-center gap-1">
 												<Badge className={`${PRIORITY_COLOR[task.priority]}`}>
 													{task.priority}
 												</Badge>
+												<TaskActions
+													task={task}
+													teamSlug={currentTeam.slug}
+													members={members}
+													archivingAvailable={taskArchivingAvailable}
+												/>
 											</CardAction>
 										</CardHeader>
 										<CardFooter className="flex-col items-start gap-1.5 text-sm">
 											<div className="line-clamp-1 flex gap-2 font-medium">{task.title}</div>
+											{task.assignee && (
+												<span className="text-xs text-muted-foreground">{task.assignee.name}</span>
+											)}
 										</CardFooter>
 									</Card>
 								))}
@@ -155,10 +182,45 @@ export default function KanbanBoard() {
 								currentTeamSlug={currentTeam.slug}
 								projectId={project.id}
 								columnId={column.id}
+								members={members}
 							/>
 						</fieldset>
 					))}
 				</div>
+				<details className="rounded-2xl border bg-card p-4">
+					<summary className="cursor-pointer text-sm font-medium">
+						Tareas archivadas ({archivedTasks.length})
+					</summary>
+					{!taskArchivingAvailable && (
+						<p role="status" className="mt-3 text-sm text-muted-foreground">
+							El archivado estará disponible al aplicar la migración de tareas. Las tareas siguen
+							visibles en el tablero.
+						</p>
+					)}
+					{archivedTasks.length === 0 ? (
+						<p className="mt-3 text-sm text-muted-foreground">No hay tareas archivadas.</p>
+					) : (
+						<ul className="mt-4 space-y-2">
+							{archivedTasks.map((task) => (
+								<li
+									key={task.id}
+									className="flex items-center justify-between gap-3 rounded-xl border p-3"
+								>
+									<div className="min-w-0">
+										<p className="break-words text-sm font-medium">{task.title}</p>
+										<p className="text-xs text-muted-foreground">{task.column?.name}</p>
+									</div>
+									<TaskActions
+										task={task}
+										teamSlug={currentTeam.slug}
+										members={members}
+										archivingAvailable={taskArchivingAvailable}
+									/>
+								</li>
+							))}
+						</ul>
+					)}
+				</details>
 			</div>
 		</>
 	);

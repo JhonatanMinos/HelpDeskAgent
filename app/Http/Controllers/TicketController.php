@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\TeamRole;
 use App\Http\Requests\Tickets\StoreTicketRequest;
 use App\Http\Requests\Tickets\UpdateTicketRequest;
 use App\Models\Team;
@@ -127,7 +128,14 @@ class TicketController extends Controller
     {
         abort_unless($ticket->team_id === $current_team->id, 404);
 
-        $this->ticketService->deleteTicket($ticket, $request->user());
+        $user = $request->user();
+        $role = $user->teamRole($current_team);
+        abort_unless(
+            $role !== null && ($role->isAtLeast(TeamRole::Admin) || $ticket->created_by === $user->id),
+            403,
+        );
+
+        $this->ticketService->deleteTicket($ticket, $user);
 
         return redirect()->route('tickets.index', ['current_team' => $current_team->slug])
             ->with('success', 'Ticket eliminado correctamente.');

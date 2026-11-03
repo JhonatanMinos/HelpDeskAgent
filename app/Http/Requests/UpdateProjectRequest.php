@@ -12,7 +12,9 @@ class UpdateProjectRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        abort_unless($this->route('project')->team_id === $this->route('current_team')->id, 404);
+
+        return true;
     }
 
     /**
@@ -23,7 +25,9 @@ class UpdateProjectRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'requirements' => ['nullable', 'string'],
+            'due_date' => ['nullable', 'date'],
         ];
     }
 }

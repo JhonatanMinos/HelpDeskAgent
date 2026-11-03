@@ -128,6 +128,31 @@ test('project workspace preserves project metadata and team scoped detail links'
 	}
 });
 
+test('project cards expose separate edit, status and delete controls outside the board link', () => {
+	const html = renderWorkspace('projects/index', {
+		projects: [
+			{
+				id: 4,
+				name: 'Network refresh',
+				status: 'activo',
+				tasks_count: 3,
+				creator: { name: 'Case owner' },
+				estimated_date_delivery: '2026-10-29',
+				Initial_requirements: 'Keep existing network',
+			},
+		],
+	});
+	for (const label of [
+		'Editar Network refresh',
+		'Cambiar estado de Network refresh',
+		'Eliminar Network refresh',
+	]) {
+		expect(html).toContain(`aria-label="${label}"`);
+	}
+	expect(html).not.toMatch(/<a\b[^>]*>(?:(?!<\/a>)[\s\S])*<button\b/);
+	expect(html).toContain('/local-team/dev/projects/4');
+});
+
 test('Kanban retains tasks and shows a useful empty column state', () => {
 	const html = renderWorkspace('projects/show', {
 		project: { id: 4, name: 'Network refresh', status: 'activo' },
@@ -150,6 +175,8 @@ test('Kanban retains tasks and shows a useful empty column state', () => {
 		'Nueva tarea',
 		'Sin tareas en esta columna',
 		'Tablero del equipo',
+		'Acciones de Review VPN',
+		'Tareas archivadas (0)',
 	]) {
 		expect(html).toContain(value);
 	}

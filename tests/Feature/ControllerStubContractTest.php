@@ -4,7 +4,6 @@ use App\Http\Controllers\DeviceController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Requests\StoreDeviceRequest;
 use App\Http\Requests\UpdateDeviceRequest;
-use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Device;
 use App\Models\Project;
 use Illuminate\Support\Facades\Route;
@@ -29,6 +28,4 @@ test('unregistered controller stubs retain their null result without changing mo
     'device update' => fn () => [DeviceController::class, 'update', [new UpdateDeviceRequest, new Device]],
     'device destroy' => fn () => [DeviceController::class, 'destroy', [new Device]],
     'project edit' => fn () => [ProjectController::class, 'edit', [new Project]],
-    'project update' => fn () => [ProjectController::class, 'update', [new UpdateProjectRequest, new Project]],
-    'project destroy' => fn () => [ProjectController::class, 'destroy', [new Project]],
 ]);

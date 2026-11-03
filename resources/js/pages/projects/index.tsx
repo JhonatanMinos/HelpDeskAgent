@@ -2,6 +2,7 @@ import type { PageProps as InertiaPageProps } from '@inertiajs/core';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
 import { KanbanSquare, Plus } from 'lucide-react';
 import { useState } from 'react';
+import { type EditableProject, ProjectActions } from '@/components/dev/project-actions';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -21,10 +22,7 @@ import {
 	store as storeProject,
 } from '@/routes/dev/projects';
 
-interface Project {
-	id: number;
-	name: string;
-	status: 'propuesto' | 'activo' | 'pausado' | 'completado';
+interface Project extends EditableProject {
 	due_date: string | null;
 	tasks_count: number;
 	creator: { name: string };
@@ -164,34 +162,42 @@ export default function DevProjectsIndex() {
 					</div>
 				) : (
 					<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-						{projects.map((project) => (
-							<Link
-								key={project.id}
-								href={
-									showProject({
-										current_team: currentTeam.slug,
-										project: project.id,
-									}).url
-								}
-								className="group min-w-0 rounded-2xl border bg-card p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-primary/35 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-reduce:transform-none"
-							>
-								<div className="mb-4 flex flex-wrap items-start justify-between gap-3">
-									<h2 className="break-words text-base font-semibold">{project.name}</h2>
-									<Badge variant="outline" className={STATUS_CLASS[project.status]}>
-										{STATUS_LABEL[project.status]}
-									</Badge>
-								</div>
-								<p className="text-xs text-muted-foreground">
-									{project.tasks_count} {project.tasks_count === 1 ? 'tarea' : 'tareas'} · creado
-									por {project.creator.name}
-								</p>
-								{project.due_date && (
-									<p className="mt-1 text-xs text-muted-foreground">
-										Entrega: {new Date(project.due_date).toLocaleDateString('es-MX')}
-									</p>
-								)}
-							</Link>
-						))}
+						{projects.map((project) => {
+							const dueDate = project.estimated_date_delivery ?? project.due_date;
+							return (
+								<article
+									key={project.id}
+									className="min-w-0 space-y-4 rounded-2xl border bg-card p-5 shadow-sm transition hover:border-primary/35 hover:shadow-md"
+								>
+									<Link
+										href={
+											showProject({
+												current_team: currentTeam.slug,
+												project: project.id,
+											}).url
+										}
+										className="block rounded-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+									>
+										<div className="mb-4 flex flex-wrap items-start justify-between gap-3">
+											<h2 className="break-words text-base font-semibold">{project.name}</h2>
+											<Badge variant="outline" className={STATUS_CLASS[project.status]}>
+												{STATUS_LABEL[project.status]}
+											</Badge>
+										</div>
+										<p className="text-xs text-muted-foreground">
+											{project.tasks_count} {project.tasks_count === 1 ? 'tarea' : 'tareas'} ·
+											creado por {project.creator.name}
+										</p>
+										{dueDate && (
+											<p className="mt-1 text-xs text-muted-foreground">
+												Entrega: {new Date(dueDate).toLocaleDateString('es-MX')}
+											</p>
+										)}
+									</Link>
+									<ProjectActions project={project} teamSlug={currentTeam.slug} />
+								</article>
+							);
+						})}
 					</div>
 				)}
 			</div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Models\Project;
+use App\Models\Task;
 use App\Models\Team;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -15,7 +16,7 @@ use Inertia\Response;
 /**
  * \App\Http\Controllers\ProjectController
  *
- * @description Lista, crea y muestra proyectos, y actualiza su estado; la creación inicializa columnas predeterminadas dentro de una transacción. Las acciones edit, update y destroy permanecen como stubs sin ruta registrada.
+ * @description Lista, crea, muestra, actualiza y elimina proyectos del equipo; la creación inicializa columnas predeterminadas dentro de una transacción. La edición se realiza desde el listado.
  */
 class ProjectController extends Controller
 {
@@ -66,12 +67,18 @@ class ProjectController extends Controller
     public function show(Team $current_team, Project $project): Response
     {
         abort_unless($project->team_id === $current_team->id, 404);
+        $archivingAvailable = Task::supportsArchiving();
 
         return Inertia::render('projects/show', [
             'project' => $project,
             'columns' => $project->columns()->with([
-                'tasks' => fn ($q) => $q->with('assignee:id,name')->orderBy('order'),
+                'tasks' => fn ($q) => $q->when($archivingAvailable, fn ($tasks) => $tasks->whereNull('archived_at'))
+                    ->with('assignee:id,name')->orderBy('order'),
             ])->get(),
+            'archivedTasks' => $archivingAvailable ? $project->task()->whereNotNull('archived_at')
+                ->with(['assignee:id,name', 'column:id,name'])->latest('archived_at')->get() : [],
+            'taskArchivingAvailable' => $archivingAvailable,
+            'members' => $current_team->members()->select('users.id', 'users.name')->get(),
         ]);
     }
 
@@ -102,16 +109,29 @@ class ProjectController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProjectRequest $request, Project $project): void
+    public function update(Team $current_team, Project $project, UpdateProjectRequest $request): RedirectResponse
     {
-        //
+        $data = $request->validated();
+        $project->update([
+            'name' => $data['name'],
+            'Initial_requirements' => $data['requirements'] ?? null,
+            'estimated_date_delivery' => $data['due_date'] ?? null,
+        ]);
+
+        return redirect()->route('dev.projects.index', ['current_team' => $current_team->slug])
+            ->with('success', 'Proyecto actualizado.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Project $project): void
+    public function destroy(Team $current_team, Project $project): RedirectResponse
     {
-        //
+        abort_unless($project->team_id === $current_team->id, 404);
+
+        $project->delete();
+
+        return redirect()->route('dev.projects.index', ['current_team' => $current_team->slug])
+            ->with('success', 'Proyecto eliminado.');
     }
 }

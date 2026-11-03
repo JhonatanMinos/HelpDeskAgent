@@ -4,6 +4,13 @@ HelpdeskAgent es una aplicación web multi-tenant para gestionar tiendas/sucursa
 
 ## Visión general
 
+### Eliminación de tickets y actualización de sucursales
+
+- Eliminar un ticket realiza un borrado lógico: conserva el ticket, sus comentarios y actividades, incluida la persona que lo eliminó. El ticket deja de aparecer en consultas y rutas normales. No se incluye una interfaz de restauración.
+- Antes de activar esta versión, aplicar la migración `2026_10_30_000001_add_deleted_at_to_tickets_table.php` en una ventana de mantenimiento. No ejecutar el código nuevo contra un esquema sin `tickets.deleted_at`. La migración no recupera historiales eliminados previamente.
+- Revertir esta migración elimina las marcas de borrado y puede volver a mostrar tickets eliminados. No hacer rollback sin un respaldo y un plan de recuperación. El borrado físico de equipos o usuarios conserva las cascadas existentes y no garantiza retención permanente de auditoría.
+- `RefreshStoreStatusJob` evita despachos duplicados por sucursal mientras exista su bloqueo, con una expiración de 60 segundos. Todos los procesos que despachan estos trabajos deben compartir un almacén de caché con soporte de bloqueos. Esto no garantiza ejecución exactamente una vez ni impide duplicados después de expirar el bloqueo.
+
 La aplicación está organizada alrededor de dos ejes principales:
 
 - Operación de soporte y monitoreo de tiendas/branches.

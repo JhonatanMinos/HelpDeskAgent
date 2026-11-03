@@ -7,7 +7,14 @@
 	},
 	"files": {
 		"ignoreUnknown": false,
-		"includes": ["**", "!vendor", "!node_modules", "!public/build", "!bootstrap/cache"]
+		"includes": [
+			"resources/**",
+			"tests/frontend/**",
+			"vite.config.ts",
+			"tsconfig.json",
+			"package.json",
+			"biome.json"
+		]
 	},
 	"formatter": {
 		"enabled": true,

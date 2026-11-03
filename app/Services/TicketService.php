@@ -114,8 +114,6 @@ class TicketService
                 'Ticket eliminado',
             );
 
-            $ticket->comments()->delete();
-            $ticket->activities()->delete();
             $ticket->delete();
         });
     }
